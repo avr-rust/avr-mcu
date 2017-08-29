@@ -3,4 +3,18 @@ name = "avr-mcu"
 version = "0.1.0"
 authors = ["Dylan McKay <me@dylanmckay.io>"]
 
+description = """
+Pragmatic structures for all AVR microcontrollers
+"""
+
+license = "MIT"
+repository = "https://github.com/avr-rust/avr-mcu"
+documentation = "https://docs.rs/avr-mcu"
+
+keywords = ["avr", "mcu", "io", "constants", "pins"]
+categories = ["embedded"]
+
+
 [dependencies]
+xmltree = "0.4"
+
