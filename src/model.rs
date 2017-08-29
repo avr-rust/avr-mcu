@@ -1,5 +1,5 @@
 #[derive(Clone, Debug)]
-pub struct Pack {
+pub struct Mcu {
     pub device: Device,
     pub variants: Vec<Variant>,
     pub modules: Vec<Module>,
