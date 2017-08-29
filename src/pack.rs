@@ -35,7 +35,7 @@ fn read_pack(root: &Element) -> Mcu {
 fn read_device(device: &Element) -> Device {
     let device_name = device.attributes.get("name").unwrap().clone();
 
-    let modules = device.get_child("peripherals").unwrap()
+    let peripherals = device.get_child("peripherals").unwrap()
                         .children.iter()
                         .map(self::read_module)
                         .collect();
@@ -48,7 +48,7 @@ fn read_device(device: &Element) -> Device {
     Device {
         name: device_name,
         address_spaces: address_spaces,
-        modules: modules,
+        peripherals,
     }
 }
 

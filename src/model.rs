@@ -17,7 +17,7 @@ pub struct Device {
     /// A list of all address spaces the device has.
     pub address_spaces: Vec<AddressSpace>,
     /// A list of supported modules.
-    pub modules: Vec<Module>,
+    pub peripherals: Vec<Module>,
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
