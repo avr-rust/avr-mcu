@@ -13,10 +13,11 @@ extern crate xmltree;
 extern crate lazy_static;
 
 pub use self::model::*;
-pub use self::load::microcontrollers;
+pub use self::load::{microcontroller, microcontrollers};
 
 mod model;
 mod pack;
 mod load;
-mod current;
+
+pub mod current;
 
