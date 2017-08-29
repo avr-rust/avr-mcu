@@ -57,3 +57,12 @@ fn find_packs(in_dir: &Path) -> Result<Vec<PathBuf>, io::Error> {
     Ok(paths)
 }
 
+#[cfg(test)]
+mod test {
+    #[test]
+    fn there_are_at_least_100_microcontrollers() {
+        let mcus = super::microcontrollers();
+        assert!(mcus.len() > 100, "there should be at least 100 microcontrollers");
+    }
+}
+
