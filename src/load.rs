@@ -33,6 +33,10 @@ pub fn load_microcontrollers() -> Vec<Mcu> {
         .expect("error whilst reading microcontrollers")
 }
 
+#[cfg(target_arch = "avr")]
+pub fn current() -> &'static Mcu {
+}
+
 /// Retrieves a list of `Mcu` objects in a directory containg `PACK_COLLECTIONS`.
 fn load_microcontrollers_from(path: &Path) -> Result<Vec<Mcu>, io::Error> {
     let mut pack_paths = Vec::new();
