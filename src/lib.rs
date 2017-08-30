@@ -8,6 +8,8 @@
 //! }
 //! ```
 
+#![feature(conservative_impl_trait)]
+
 extern crate xmltree;
 #[macro_use]
 extern crate lazy_static;

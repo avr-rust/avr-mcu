@@ -127,6 +127,22 @@ impl Mcu {
     pub fn module(&self, name: &str) -> Option<&Module> {
         self.modules.iter().find(|p| p.name == name)
     }
+
+    /// Gets an iterator over all modules and peripherals.
+    pub fn modules_and_peripherals<'a>(&'a self)
+        -> impl Iterator<Item=&'a Module> {
+        self.modules.iter().chain(self.device.peripherals.iter())
+    }
+
+    /// Gets an iterator over all register groups.
+    pub fn register_groups<'a>(&'a self) -> impl Iterator<Item=&'a RegisterGroup> {
+        self.modules_and_peripherals().flat_map(|m| m.register_groups.iter())
+    }
+
+    /// Gets an iterator over all registers.
+    pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
+        self.register_groups().flat_map(|rg| rg.registers.iter())
+    }
 }
 
 impl Register {
