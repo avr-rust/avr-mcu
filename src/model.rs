@@ -16,8 +16,8 @@ pub struct Device {
     pub name: String,
     /// A list of all address spaces the device has.
     pub address_spaces: Vec<AddressSpace>,
-    /// A list of supported modules.
-    pub peripherals: Vec<Module>,
+    /// A list of supported peripherals.
+    pub peripherals: Vec<Peripheral>,
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
@@ -73,21 +73,27 @@ pub struct MemorySegment {
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub struct Peripheral {
+    /// The name of the peripheral, for example, `PORT`.
+    pub name: String,
+    /// A list of instances where the peripheral is used.
+    pub instances: Vec<Instance>,
+}
+
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Module {
     /// The name of the module, for example, `PORT`.
     pub name: String,
-    /// A list of instances where the module is used.
-    pub instances: Vec<Instance>,
     /// Registers associated with the module.
     pub register_groups: Vec<RegisterGroup>,
 }
 
-/// An instance of a module.
+/// An instance of a peripheral.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Instance {
-    /// The name of the module instance, for example, `PORTB`.
+    /// The name of the peripheral instance, for example, `PORTB`.
     pub name: String,
-    /// What signals are used in the module.
+    /// What signals are used in the peripheral.
     pub signals: Vec<Signal>,
 }
 
@@ -119,7 +125,7 @@ pub struct Signal {
 
 impl Mcu {
     /// Gets a peripheral module by name.
-    pub fn peripheral(&self, name: &str) -> Option<&Module> {
+    pub fn peripheral(&self, name: &str) -> Option<&Peripheral> {
         self.device.peripherals.iter().find(|p| p.name == name)
     }
 
@@ -128,20 +134,21 @@ impl Mcu {
         self.modules.iter().find(|p| p.name == name)
     }
 
-    /// Gets an iterator over all modules and peripherals.
-    pub fn modules_and_peripherals<'a>(&'a self)
-        -> impl Iterator<Item=&'a Module> {
-        self.modules.iter().chain(self.device.peripherals.iter())
-    }
-
     /// Gets an iterator over all register groups.
     pub fn register_groups<'a>(&'a self) -> impl Iterator<Item=&'a RegisterGroup> {
-        self.modules_and_peripherals().flat_map(|m| m.register_groups.iter())
+        self.modules.iter().flat_map(|m| m.register_groups.iter())
     }
 
     /// Gets an iterator over all registers.
     pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
         self.register_groups().flat_map(|rg| rg.registers.iter())
+    }
+}
+
+impl Module {
+    /// Gets an iterator over all registers in the module.
+    pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
+        self.register_groups.iter().flat_map(|rg| rg.registers.iter())
     }
 }
 

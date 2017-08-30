@@ -37,7 +37,7 @@ fn read_device(device: &Element) -> Device {
 
     let peripherals = device.get_child("peripherals").unwrap()
                         .children.iter()
-                        .map(self::read_module)
+                        .map(self::read_peripheral)
                         .collect();
 
     let address_spaces = device.get_child("address-spaces")
@@ -52,14 +52,27 @@ fn read_device(device: &Element) -> Device {
     }
 }
 
-fn read_module(module: &Element) -> Module {
-    let module_name = module.attributes.get("name").unwrap().clone();
-    let mut register_groups = Vec::new();
+fn read_peripheral(module: &Element) -> Peripheral {
+    let name = module.attributes.get("name").unwrap().clone();
     let mut instances = Vec::new();
 
     for child in module.children.iter() {
         match &child.name[..] {
             "instance" => instances.push(read_instance(child)),
+            // Unimplemented tags.
+            _ => (),
+        }
+    }
+
+    Peripheral { name, instances }
+}
+
+fn read_module(module: &Element) -> Module {
+    let module_name = module.attributes.get("name").unwrap().clone();
+    let mut register_groups = Vec::new();
+
+    for child in module.children.iter() {
+        match &child.name[..] {
             "register-group" => register_groups.push(read_register_group(child)),
             // Unimplemented tags.
             _ => (),
@@ -68,7 +81,6 @@ fn read_module(module: &Element) -> Module {
 
     Module {
         name: module_name,
-        instances: instances,
         register_groups: register_groups,
     }
 }
