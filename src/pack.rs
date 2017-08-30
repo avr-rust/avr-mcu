@@ -115,7 +115,7 @@ fn read_instance(instance: &Element) -> Instance {
 fn read_signal(signal: &Element) -> Signal {
     Signal {
         pad: signal.attributes.get("pad").unwrap().clone(),
-        group: signal.attributes.get("pad").map(|p| p.clone()),
+        group: signal.attributes.get("group").map(|p| p.clone()),
         index: signal.attributes.get("index").map(|i| i.parse().unwrap()),
     }
 }
