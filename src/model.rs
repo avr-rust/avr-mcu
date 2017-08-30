@@ -123,6 +123,12 @@ pub struct Signal {
     pub index: Option<u8>,
 }
 
+/// A port, such as `PORTB`.
+pub struct Port<'a> {
+    instance: &'a Instance,
+    register_group: &'a RegisterGroup,
+}
+
 impl Mcu {
     /// Gets a peripheral module by name.
     pub fn peripheral(&self, name: &str) -> Option<&Peripheral> {
@@ -143,9 +149,65 @@ impl Mcu {
     pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
         self.register_groups().flat_map(|rg| rg.registers.iter())
     }
+
+    /// Gets a port by letter.
+    pub fn port(&self, letter: char) -> Port {
+        let port_name = format!("PORT{}", letter);
+        let instance = self.port_peripheral().instance(&port_name)
+            .expect("no port instance with that letter found");
+        let register_group = self.port_module().register_group(&port_name)
+            .expect("no port register group with that letter found");
+        Port { instance, register_group }
+    }
+
+    /// Gets the port peripheral.
+    pub fn port_peripheral(&self) -> &Peripheral {
+        self.peripheral("PORT").expect("mcu does not have a port peripheral")
+    }
+
+    /// Gets the port module.
+    pub fn port_module(&self) -> &Module {
+        self.module("PORT").expect("mcu does not have a port module")
+    }
+}
+
+impl Peripheral {
+    /// Gets an instance by name.
+    pub fn instance(&self, name: &str) -> Option<&Instance> {
+        self.instances.iter().find(|i| i.name == name)
+    }
+
+    /// Gets an iterator over all signals that the peripheral uses.
+    pub fn signals<'a>(&'a self) -> impl Iterator<Item=&'a Signal> {
+        self.instances.iter().flat_map(|i| i.signals.iter())
+    }
+
+    pub fn instance_signal_with_pad(&self, pad: &str)
+        -> Option<(&Instance, &Signal)> {
+        self.instance_signals_on_pad(pad).next()
+    }
+
+    /// Gets a tuple of `(instance, signal)` pairs that use a pad by its name.
+    fn instance_signals_on_pad<'a>(&'a self, pad: &str) -> impl Iterator<Item=(&'a Instance, &'a Signal)> {
+        let mut instance_signals = Vec::new();
+
+        for instance in self.instances.iter() {
+            for signal in instance.signals.iter() {
+                if signal.pad == pad {
+                    instance_signals.push((instance, signal));
+                }
+            }
+        }
+        instance_signals.into_iter()
+    }
 }
 
 impl Module {
+    /// Gets a register group by name.
+    pub fn register_group(&self, name: &str) -> Option<&RegisterGroup> {
+        self.register_groups.iter().find(|rg| rg.name == name)
+    }
+
     /// Gets an iterator over all registers in the module.
     pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
         self.register_groups.iter().flat_map(|rg| rg.registers.iter())
@@ -166,6 +228,38 @@ impl Register {
         }
 
         result
+    }
+}
+
+impl<'a> Port<'a> {
+    /// Gets all associated registers.
+    pub fn registers(&'a self) -> impl Iterator<Item=&'a Register> {
+        self.register_group.registers.iter()
+    }
+
+    /// Gets all associated signals.
+    pub fn signals(&'a self) -> impl Iterator<Item=&'a Signal> {
+        self.instance.signals.iter()
+    }
+
+    /// Gets the signal associated with a pad.
+    pub fn signal_with_pad(&'a self, pad: &str) -> Option<&'a Signal> {
+        self.signals().find(|s| s.pad == pad)
+    }
+
+    /// Gets the data direction register.
+    pub fn ddr_register(&self) -> &Register {
+        self.registers().find(|r| r.name.starts_with("DDR")).expect("port does not have ddr register")
+    }
+
+    /// Gets the port register.
+    pub fn port_register(&self) -> &Register {
+        self.registers().find(|r| r.name.starts_with("PORT")).expect("port does not have port register")
+    }
+
+    /// Gets the pin register.
+    pub fn pin_register(&self) -> &Register {
+        self.registers().find(|r| r.name.starts_with("PIN")).expect("port does not have pin register")
     }
 }
 
