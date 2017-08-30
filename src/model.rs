@@ -117,6 +117,18 @@ pub struct Signal {
     pub index: Option<u8>,
 }
 
+impl Mcu {
+    /// Gets a peripheral module by name.
+    pub fn peripheral(&self, name: &str) -> Option<&Module> {
+        self.device.peripherals.iter().find(|p| p.name == name)
+    }
+
+    /// Gets a module by name.
+    pub fn module(&self, name: &str) -> Option<&Module> {
+        self.modules.iter().find(|p| p.name == name)
+    }
+}
+
 impl Register {
     /// Get the union between two descriptions of the same register.
     pub fn union(&self, with: &Self) -> Self {
