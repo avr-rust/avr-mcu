@@ -151,15 +151,43 @@ fn read_register_group(register_group: &Element) -> RegisterGroup {
 /// This looks like
 ///
 /// ```xml
-/// <register caption="EEPROM Address Register  Bytes" name="EEAR" offset="0x41" size="2" mask="0x01FF"/>
+/// <register caption="EEPROM Address Register  Bytes" name="EEAR" offset="0x41" size="2" mask="0x01FF" ocd-rw=""/>
 /// ```
 fn read_register(register: &Element) -> Register {
+    let rw = match register.attributes.get("ocd-rw").map(String::as_ref) {
+        Some("R") => ReadWrite::ReadOnly,
+        Some("W") => ReadWrite::WriteOnly,
+        _ => ReadWrite::ReadAndWrite,
+    };
+
+    let bitfields = register.children.iter().filter_map(|child| match &child.name[..] {
+        "bitfield" => Some(self::read_bitfield(child)),
+        _ => None,
+    }).collect();
+
     Register {
         name: register.attributes.get("name").unwrap().clone(),
         caption: register.attributes.get("caption").unwrap().clone(),
         offset: read_int(register.attributes.get("offset")).clone(),
         size: register.attributes.get("size").unwrap().parse().unwrap(),
-        mask: read_opt_int(register.attributes.get("mask")).clone()
+        mask: read_opt_int(register.attributes.get("mask")).clone(),
+        rw,
+        bitfields,
+    }
+}
+
+/// Reads a bitfield.
+///
+/// This looks like
+///
+/// ```xml
+/// <bitfield caption="Power Reduction Serial Peripheral Interface" mask="0x04" name="PRSPI"/>
+/// ```
+fn read_bitfield(bitfield: &Element) -> Bitfield {
+    Bitfield {
+        name: bitfield.attributes.get("name").expect("bitfield name").clone(),
+        caption: bitfield.attributes.get("caption").unwrap_or(&"".to_owned()).clone(),
+        mask: read_int(bitfield.attributes.get("mask")).clone(),
     }
 }
 
@@ -237,4 +265,3 @@ fn read_hex(value: Option<&String>) -> u32 {
     let value = value.unwrap().replacen("0x", "", 1);
     u32::from_str_radix(&value, 16).unwrap()
 }
-

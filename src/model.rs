@@ -105,6 +105,13 @@ pub struct RegisterGroup {
     pub registers: Vec<Register>,
 }
 
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub enum ReadWrite {
+    ReadAndWrite,
+    ReadOnly,
+    WriteOnly
+}
+
 /// An CPU or IO register.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Register {
@@ -113,6 +120,15 @@ pub struct Register {
     pub offset: u32,
     pub size: u32,
     pub mask: Option<u32>,
+    pub rw: ReadWrite,
+    pub bitfields: Vec<Bitfield>,
+}
+
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub struct Bitfield {
+    pub name: String,
+    pub caption: String,
+    pub mask: u32,
 }
 
 /// A signal that is exposed on the outside of the package.
@@ -262,4 +278,3 @@ impl<'a> Port<'a> {
         self.registers().find(|r| r.name.starts_with("PIN")).expect("port does not have pin register")
     }
 }
-
