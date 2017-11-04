@@ -86,6 +86,8 @@ pub struct Module {
     pub name: String,
     /// Registers associated with the module.
     pub register_groups: Vec<RegisterGroup>,
+    /// Value groups associated with the module.
+    pub value_groups: Vec<ValueGroup>,
 }
 
 /// An instance of a peripheral.
@@ -103,6 +105,22 @@ pub struct RegisterGroup {
     pub name: String,
     pub caption: String,
     pub registers: Vec<Register>,
+}
+
+/// A group of values.
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub struct ValueGroup {
+    pub name: String,
+    pub caption: String,
+    pub values: Vec<Value>,
+}
+
+/// A values for a register/mask.
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub struct Value {
+    pub name: String,
+    pub caption: String,
+    pub value: u32,
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
@@ -129,6 +147,8 @@ pub struct Bitfield {
     pub name: String,
     pub caption: String,
     pub mask: u32,
+    /// reference into value_groups on the container
+    pub values: Option<String>
 }
 
 /// A signal that is exposed on the outside of the package.

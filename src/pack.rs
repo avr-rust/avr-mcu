@@ -70,10 +70,12 @@ fn read_peripheral(module: &Element) -> Peripheral {
 fn read_module(module: &Element) -> Module {
     let module_name = module.attributes.get("name").unwrap().clone();
     let mut register_groups = Vec::new();
+    let mut value_groups = Vec::new();
 
     for child in module.children.iter() {
         match &child.name[..] {
             "register-group" => register_groups.push(read_register_group(child)),
+            "value-group" => value_groups.push(read_value_group(child)),
             // Unimplemented tags.
             _ => (),
         }
@@ -82,6 +84,7 @@ fn read_module(module: &Element) -> Module {
     Module {
         name: module_name,
         register_groups: register_groups,
+        value_groups,
     }
 }
 
@@ -146,6 +149,47 @@ fn read_register_group(register_group: &Element) -> RegisterGroup {
     }
 }
 
+/// Reads a value group.
+///
+/// This looks like so
+///
+/// ```xml
+///      <value-group caption="" name="CLK_SEL_3BIT_EXT">
+///        <value caption="No Clock Source (Stopped)" name="VAL_0x00" value="0x00"/>
+///        <value caption="Running, No Prescaling" name="VAL_0x01" value="0x01"/>
+///      </value-group>
+/// ```
+fn read_value_group(value_group: &Element) -> ValueGroup {
+    let (name, caption) = (value_group.attributes.get("name").unwrap(),
+                           value_group.attributes.get("caption").unwrap());
+    let values = value_group.children.iter().filter_map(|child| match &child.name[..] {
+        "value" => Some(self::read_value(child)),
+        _ => panic!("unknown value-group child: '{}'", child.name),
+    }).collect();
+
+    ValueGroup {
+        name: name.clone(),
+        caption: caption.clone(),
+        values,
+    }
+}
+
+/// Reads a value.
+///
+/// This looks like
+///
+/// ```xml
+/// <value caption="Running, CLK/256" name="VAL_0x04" value="0x04"/>
+/// ```
+fn read_value(value: &Element) -> Value {
+    Value {
+        name: value.attributes.get("name").unwrap().clone(),
+        caption: value.attributes.get("caption").unwrap().clone(),
+        value: read_int(value.attributes.get("value")).clone(),
+    }
+}
+
+
 /// Reads a register.
 ///
 /// This looks like
@@ -182,12 +226,14 @@ fn read_register(register: &Element) -> Register {
 ///
 /// ```xml
 /// <bitfield caption="Power Reduction Serial Peripheral Interface" mask="0x04" name="PRSPI"/>
+/// <bitfield caption="Prescaler source of Timer/Counter 3" mask="0x07" name="CS3" values="CLK_SEL_3BIT_EXT"/>
 /// ```
 fn read_bitfield(bitfield: &Element) -> Bitfield {
     Bitfield {
         name: bitfield.attributes.get("name").expect("bitfield name").clone(),
         caption: bitfield.attributes.get("caption").unwrap_or(&"".to_owned()).clone(),
         mask: read_int(bitfield.attributes.get("mask")).clone(),
+        values: bitfield.attributes.get("values").map(String::clone),
     }
 }
 
