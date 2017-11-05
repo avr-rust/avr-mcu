@@ -45,12 +45,39 @@ fn read_device(device: &Element) -> Device {
                                .map(self::read_address_space)
                                .collect();
 
+    let interrupts = device
+        .get_child("interrupts")
+        .unwrap()
+        .children
+        .iter()
+        .map(self::read_interrupt)
+        .collect();
+
     Device {
         name: device_name,
         address_spaces: address_spaces,
         peripherals,
+        interrupts,
     }
 }
+
+fn read_interrupt(interrupt: &Element) -> Interrupt {
+    let index: u32 = read_int(interrupt.attributes.get("index")).clone();
+    Interrupt {
+        name: interrupt
+            .attributes
+            .get("name")
+            .unwrap_or(&format!("INT{}", index))
+            .clone(),
+        caption: interrupt
+            .attributes
+            .get("caption")
+            .unwrap_or(&format!("INT{}", index))
+            .clone(),
+        index,
+    }
+}
+
 
 fn read_peripheral(module: &Element) -> Peripheral {
     let name = module.attributes.get("name").unwrap().clone();

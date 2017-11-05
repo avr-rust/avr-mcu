@@ -18,6 +18,8 @@ pub struct Device {
     pub address_spaces: Vec<AddressSpace>,
     /// A list of supported peripherals.
     pub peripherals: Vec<Peripheral>,
+    /// A list of supported interrupts
+    pub interrupts: Vec<Interrupt>,
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
@@ -78,6 +80,16 @@ pub struct Peripheral {
     pub name: String,
     /// A list of instances where the peripheral is used.
     pub instances: Vec<Instance>,
+}
+
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
+pub struct Interrupt {
+    /// The name of the interrupt, for example `TIMER1_COMPA`.
+    pub name: String,
+    /// A brief description of the interrupt
+    pub caption: String,
+    /// The interrupt vector table index
+    pub index: u32,
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
