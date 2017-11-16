@@ -225,6 +225,7 @@ fn read_value(value: &Element) -> Value {
 /// <register caption="EEPROM Address Register  Bytes" name="EEAR" offset="0x41" size="2" mask="0x01FF" ocd-rw=""/>
 /// ```
 fn read_register(register: &Element) -> Register {
+    let byte_count = register.attributes.get("size").unwrap().parse().unwrap();
     let rw = match register.attributes.get("ocd-rw").map(String::as_ref) {
         Some("R") => ReadWrite::ReadOnly,
         Some("W") => ReadWrite::WriteOnly,
@@ -232,7 +233,7 @@ fn read_register(register: &Element) -> Register {
     };
 
     let bitfields = register.children.iter().filter_map(|child| match &child.name[..] {
-        "bitfield" => Some(self::read_bitfield(child)),
+        "bitfield" => Some(self::read_bitfield(child, byte_count)),
         _ => None,
     }).collect();
 
@@ -240,10 +241,10 @@ fn read_register(register: &Element) -> Register {
         name: register.attributes.get("name").unwrap().clone(),
         caption: register.attributes.get("caption").unwrap().clone(),
         offset: read_int(register.attributes.get("offset")).clone(),
-        size: register.attributes.get("size").unwrap().parse().unwrap(),
         mask: read_opt_int(register.attributes.get("mask")).clone(),
-        rw,
+        size: byte_count,
         bitfields,
+        rw,
     }
 }
 
@@ -255,12 +256,13 @@ fn read_register(register: &Element) -> Register {
 /// <bitfield caption="Power Reduction Serial Peripheral Interface" mask="0x04" name="PRSPI"/>
 /// <bitfield caption="Prescaler source of Timer/Counter 3" mask="0x07" name="CS3" values="CLK_SEL_3BIT_EXT"/>
 /// ```
-fn read_bitfield(bitfield: &Element) -> Bitfield {
+fn read_bitfield(bitfield: &Element, byte_count: u32) -> Bitfield {
     Bitfield {
         name: bitfield.attributes.get("name").expect("bitfield name").clone(),
         caption: bitfield.attributes.get("caption").unwrap_or(&"".to_owned()).clone(),
         mask: read_int(bitfield.attributes.get("mask")).clone(),
         values: bitfield.attributes.get("values").map(String::clone),
+        size: byte_count,
     }
 }
 

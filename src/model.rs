@@ -186,7 +186,12 @@ pub struct Bitfield {
     /// A description of the bitfield.
     pub caption: String,
     /// The mask that makes up the bitfield.
+    ///
+    /// This will always match up to the parent register. A 16-bit register has
+    /// 16-but masks.
     pub mask: u32,
+    /// The number of bytes that make up the bitfield.
+    pub size: u32,
     /// reference into value_groups on the container
     pub values: Option<String>
 }
