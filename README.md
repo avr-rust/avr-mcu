@@ -1,6 +1,7 @@
 # avr-mcu
 
 [![Crates.io](https://img.shields.io/crates/v/avr-mcu.svg)](https://crates.io/crates/avr-mcu)
+[![Build Status](https://travis-ci.org/avr-rust/avr-mcu.svg?branch=master)](https://travis-ci.org/avr-rust/avr-mcu)
 [![license](https://img.shields.io/github/license/avr-rust/avr-mcu.svg)]()
 
 Pragmatic access to AVR chip information.
