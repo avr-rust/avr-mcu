@@ -1,3 +1,5 @@
+//! Utilities for getting information on the current microcontroller.
+
 use Mcu;
 use load;
 use std::env;

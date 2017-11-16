@@ -22,8 +22,8 @@ pub struct Device {
     pub interrupts: Vec<Interrupt>,
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
 /// A variation of a specific microcontroller.
+#[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Variant {
     /// The name of the variant.
     pub name: String,
@@ -61,8 +61,13 @@ pub struct AddressSpace {
 /// A segment of memory in a particular address space.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct MemorySegment {
+    /// The name of the segment.
+    pub name: String,
+    /// A pointer to the first byte in the segment.
     pub start_address: u32,
+    /// The number of bytes in the segment.
     pub size: u32,
+    /// The segment type.
     pub ty: String,
     /// Whether the segment can be read from.
     pub readable: bool,
@@ -70,18 +75,24 @@ pub struct MemorySegment {
     pub writable: bool,
     /// Whether the segment can be executed.
     pub executable: bool,
-    pub name: String,
+    /// How large pages are in this segment.
     pub page_size: Option<u32>,
 }
 
+/// An on-board peripheral, such as an IO port.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Peripheral {
     /// The name of the peripheral, for example, `PORT`.
     pub name: String,
     /// A list of instances where the peripheral is used.
+    ///
+    /// As an example, if the peripheral is an IO port, then the
+    /// instance list would list all PORT instances, such as `PORTA`
+    /// and `PORTB`.
     pub instances: Vec<Instance>,
 }
 
+/// An interrupt supported by a device.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Interrupt {
     /// The name of the interrupt, for example `TIMER1_COMPA`.
@@ -92,6 +103,7 @@ pub struct Interrupt {
     pub index: u32,
 }
 
+/// A module built into the silicon.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Module {
     /// The name of the module, for example, `PORT`.
@@ -114,8 +126,10 @@ pub struct Instance {
 /// A group of registers.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct RegisterGroup {
+    /// The name of the group.
     pub name: String,
     pub caption: String,
+    /// The registers that make up the group.
     pub registers: Vec<Register>,
 }
 
@@ -135,29 +149,43 @@ pub struct Value {
     pub value: u32,
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+/// Specifies the mutability of a register.
+#[derive(Copy, Clone, Debug, PartialOrd, PartialEq)]
 pub enum ReadWrite {
+    /// The register is readable and writable.
     ReadAndWrite,
+    /// The register is read-only.
     ReadOnly,
+    /// The register is write-only.
     WriteOnly
 }
 
 /// An CPU or IO register.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Register {
+    /// The name of the register, such as `TCCR0A`.
     pub name: String,
+    /// The register description.
     pub caption: String,
+    /// The offset of the register in IO space.
     pub offset: u32,
+    /// The number of bytes that make up the bitfield.
     pub size: u32,
     pub mask: Option<u32>,
+    /// The mutability of the register.
     pub rw: ReadWrite,
+    /// The bitfields supported by the register.
     pub bitfields: Vec<Bitfield>,
 }
 
+/// A bitfield within a register.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Bitfield {
+    /// The name of the bitfield, such as `U2X0` for the USART register `UCSR0A`.
     pub name: String,
+    /// A description of the bitfield.
     pub caption: String,
+    /// The mask that makes up the bitfield.
     pub mask: u32,
     /// reference into value_groups on the container
     pub values: Option<String>
@@ -166,6 +194,7 @@ pub struct Bitfield {
 /// A signal that is exposed on the outside of the package.
 #[derive(Clone, Debug, PartialOrd, PartialEq)]
 pub struct Signal {
+    /// The external pin name that exposes the signal.
     pub pad: String,
     pub group: Option<String>,
     pub index: Option<u8>,
@@ -173,7 +202,9 @@ pub struct Signal {
 
 /// A port, such as `PORTB`.
 pub struct Port<'a> {
+    /// The port peripheral instance.
     instance: &'a Instance,
+    /// The register group associated with the port.
     register_group: &'a RegisterGroup,
 }
 
