@@ -10,7 +10,7 @@ pub struct Mcu {
 }
 
 /// Information fore a specific device.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Device {
     /// The name of the device.
     pub name: String,
@@ -44,7 +44,7 @@ pub struct Variant {
 }
 
 /// An address space.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct AddressSpace {
     /// The identifier.
     pub id: String,
@@ -59,7 +59,7 @@ pub struct AddressSpace {
 }
 
 /// A segment of memory in a particular address space.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct MemorySegment {
     /// The name of the segment.
     pub name: String,
@@ -80,7 +80,7 @@ pub struct MemorySegment {
 }
 
 /// An on-board peripheral, such as an IO port.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Peripheral {
     /// The name of the peripheral, for example, `PORT`.
     pub name: String,
@@ -93,7 +93,7 @@ pub struct Peripheral {
 }
 
 /// An interrupt supported by a device.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Interrupt {
     /// The name of the interrupt, for example `TIMER1_COMPA`.
     pub name: String,
@@ -104,7 +104,7 @@ pub struct Interrupt {
 }
 
 /// A module built into the silicon.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Module {
     /// The name of the module, for example, `PORT`.
     pub name: String,
@@ -115,7 +115,7 @@ pub struct Module {
 }
 
 /// An instance of a peripheral.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Instance {
     /// The name of the peripheral instance, for example, `PORTB`.
     pub name: String,
@@ -124,7 +124,7 @@ pub struct Instance {
 }
 
 /// A group of registers.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct RegisterGroup {
     /// The name of the group.
     pub name: String,
@@ -134,7 +134,7 @@ pub struct RegisterGroup {
 }
 
 /// A group of values.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct ValueGroup {
     pub name: String,
     pub caption: String,
@@ -142,7 +142,7 @@ pub struct ValueGroup {
 }
 
 /// A values for a register/mask.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Value {
     pub name: String,
     pub caption: String,
@@ -150,7 +150,7 @@ pub struct Value {
 }
 
 /// Specifies the mutability of a register.
-#[derive(Copy, Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub enum ReadWrite {
     /// The register is readable and writable.
     ReadAndWrite,
@@ -161,7 +161,7 @@ pub enum ReadWrite {
 }
 
 /// An CPU or IO register.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Register {
     /// The name of the register, such as `TCCR0A`.
     pub name: String,
@@ -179,7 +179,7 @@ pub struct Register {
 }
 
 /// A bitfield within a register.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Bitfield {
     /// The name of the bitfield, such as `U2X0` for the USART register `UCSR0A`.
     pub name: String,
@@ -197,7 +197,7 @@ pub struct Bitfield {
 }
 
 /// A signal that is exposed on the outside of the package.
-#[derive(Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Signal {
     /// The external pin name that exposes the signal.
     pub pad: String,
@@ -206,6 +206,7 @@ pub struct Signal {
 }
 
 /// A port, such as `PORTB`.
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Port<'a> {
     /// The port peripheral instance.
     instance: &'a Instance,
