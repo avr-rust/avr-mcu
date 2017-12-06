@@ -12,7 +12,7 @@ pub struct Info {
 
 /// Looks up extra information about a microcontroller.
 pub fn lookup<S>(mcu_name: S) -> Info where S: AsRef<str> {
-    match mcu_name.as_ref() {
+    match &mcu_name.as_ref().to_lowercase()[..] {
         "at90s2313" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2313__" },
         "at90s2323" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2323__" },
         "at90s2333" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2333__" },
@@ -300,11 +300,7 @@ pub fn lookup<S>(mcu_name: S) -> Info where S: AsRef<str> {
         "attiny12" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny12__" },
         "attiny15" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny15__" },
         "attiny28" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny28__" },
-        // mcu_name => panic!("the AVR architecture name for MCU '{}' is unknown", mcu_name),
-        mcu_name => {
-            eprintln!("the AVR architecture name for MCU '{}' is unknown", mcu_name);
-            Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny28__" }
-        },
+        mcu_name => panic!("the AVR architecture name for MCU '{}' is unknown", mcu_name),
     }
 }
 
@@ -319,6 +315,13 @@ mod test {
         assert_eq!(Info {
             arch: Architecture::Avr5,
             c_preprocessor_name: "__AVR_ATmega328__" }, lookup("atmega328"));
+    }
+
+    #[test]
+    fn matches_upper_and_lowercase() {
+        let a = lookup("attiny85");
+        let b = lookup("ATtiny85");
+        assert_eq!(a, b);
     }
 
     #[test]
