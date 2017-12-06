@@ -1,6 +1,6 @@
 [package]
 name = "avr-mcu"
-version = "0.2.5"
+version = "0.2.6"
 authors = ["Dylan McKay <me@dylanmckay.io>"]
 
 description = """
