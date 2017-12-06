@@ -42,11 +42,12 @@ extern crate xmltree;
 extern crate lazy_static;
 
 pub use self::model::*;
-pub use self::load::{microcontroller, microcontrollers};
+pub use self::load::{microcontroller, microcontroller_names, microcontrollers};
 
 mod model;
 mod pack;
 mod load;
+mod extra_info;
 
 pub mod current;
 

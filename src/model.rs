@@ -7,6 +7,10 @@ pub struct Mcu {
     pub variants: Vec<Variant>,
     /// The modules built into the mcu package.
     pub modules: Vec<Module>,
+    /// The family that the mcu belongs to.
+    pub architecture: Architecture,
+    /// The C preprocessor name.
+    pub c_preprocessor_name: &'static str,
 }
 
 /// Information fore a specific device.
@@ -205,6 +209,19 @@ pub struct Signal {
     pub index: Option<u8>,
 }
 
+/// An AVR architecture (mcu family) name.
+///
+/// Architecture is a misnomer - 'mcu family' would make sense.
+/// Cores with the same instruction sets share an architecture name.
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Architecture {
+    Unknown,
+
+    Avr0, Avr1, Avr2, Avr25, Avr3, Avr31, Avr35, Avr4, Avr5, Avr51, Avr6,
+    Xmega2, Xmega3, Xmega4, Xmega5, Xmega6, Xmega7,
+    Tiny,
+}
+
 /// A port, such as `PORTB`.
 #[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
 pub struct Port<'a> {
@@ -345,5 +362,33 @@ impl<'a> Port<'a> {
     /// Gets the pin register.
     pub fn pin_register(&self) -> &Register {
         self.registers().find(|r| r.name.starts_with("PIN")).expect("port does not have pin register")
+    }
+}
+
+impl Architecture {
+    pub fn name(&self) -> &'static str {
+        use Architecture::*;
+
+        match *self {
+            Unknown => "<unknown architecture>",
+            Avr0 => "avr0",
+            Avr1 => "avr1",
+            Avr2 => "avr2",
+            Avr25 => "avr25",
+            Avr3 => "avr3",
+            Avr31 => "avr31",
+            Avr35 => "avr35",
+            Avr4 => "avr4",
+            Avr5 => "avr5",
+            Avr51 => "avr51",
+            Avr6 => "avr6",
+            Xmega2 => "xmega2",
+            Xmega3 => "xmega3",
+            Xmega4 => "xmega4",
+            Xmega5 => "xmega5",
+            Xmega6 => "xmega6",
+            Xmega7 => "xmega7",
+            Tiny => "tiny",
+        }
     }
 }

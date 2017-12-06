@@ -25,10 +25,16 @@ fn read_pack(root: &Element) -> Mcu {
     let variants = root.get_child("variants").unwrap().children.iter().map(self::read_variant).collect();
     let modules = root.get_child("modules").unwrap().children.iter().map(self::read_module);
 
+    // Not all desired information is available in pack files.
+    // Grab the remaining bits from a lookup table.
+    let extra_info = super::extra_info::lookup(&device.name);
+
     Mcu {
         device: device,
         variants: variants,
         modules: modules.collect(),
+        architecture: extra_info.arch,
+        c_preprocessor_name: extra_info.c_preprocessor_name,
     }
 }
 

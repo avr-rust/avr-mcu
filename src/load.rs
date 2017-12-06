@@ -19,6 +19,12 @@ const CRATE_ROOT: &'static str = env!("CARGO_MANIFEST_DIR");
 
 lazy_static! {
     static ref MCUS: Vec<Mcu> = self::load_microcontrollers().expect("failed to load microcontrollers");
+
+    static ref MCU_NAMES: Vec<String> = pack_informations()
+        .expect("could not find packfiles")
+        .into_iter()
+        .map(|pack| pack.mcu_name)
+        .collect();
 }
 
 struct PackInfo {
@@ -29,6 +35,16 @@ struct PackInfo {
 /// Retrieves a list of `Mcu` objects for all microcontrollers.
 pub fn microcontrollers() -> &'static [Mcu] {
     &MCUS[..]
+}
+
+/// Retrieves a list of all microcontroller names.
+///
+/// # Examples
+///
+/// * `atmega328p`
+/// * `attiny85`
+pub fn microcontroller_names() -> &'static [String] {
+    &MCU_NAMES[..]
 }
 
 /// Retrieves information for a specific microcontroller.
