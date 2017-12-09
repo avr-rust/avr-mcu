@@ -14,8 +14,9 @@
 //!
 //! In a lot of cases, we only care about the target microcontroller.
 //!
-//! ```
-//! let mcu = avr_mcu::current::mcu();
+//! ```nodoc
+//! let mcu = avr_mcu::current::mcu().unwrap();
+//! println!("Device: {}", mcu.device.name);
 //! ```
 //!
 //! # Behind-the-hood
