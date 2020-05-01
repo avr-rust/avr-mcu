@@ -5,21 +5,19 @@ use std::path::{Path, PathBuf};
 use std::{fs, io};
 
 /// The extension on the pack files.
-const PACK_FILE_EXT: &'static str = "atdf";
+const PACK_FILE_EXT: &str = "atdf";
 
 /// All pack collections inside the 'packs' folder
 /// of this repository.
-const PACK_COLLECTIONS: &'static [&'static str] = &[
-    "atmega", "tiny", "xmegaa", "xmegab",
-    "xmegac", "xmegad", "xmegae", "automotive",
-];
+const PACK_COLLECTIONS: &[&str] =
+    &["atmega", "tiny", "xmegaa", "xmegab", "xmegac", "xmegad", "xmegae", "automotive"];
 
 /// The on-disk path of the crate root.
-const CRATE_ROOT: &'static str = env!("CARGO_MANIFEST_DIR");
+const CRATE_ROOT: &str = env!("CARGO_MANIFEST_DIR");
 
 lazy_static! {
-    static ref MCUS: Vec<Mcu> = self::load_microcontrollers().expect("failed to load microcontrollers");
-
+    static ref MCUS: Vec<Mcu> =
+        self::load_microcontrollers().expect("failed to load microcontrollers");
     static ref MCU_NAMES: Vec<String> = pack_informations()
         .expect("could not find packfiles")
         .into_iter()
@@ -49,16 +47,18 @@ pub fn microcontroller_names() -> &'static [String] {
 
 /// Retrieves information for a specific microcontroller.
 pub fn microcontroller(name: &str) -> Mcu {
-    let pack_info = pack_informations().unwrap()
-                            .into_iter()
-                            .find(|pack_info| pack_info.mcu_name == name)
-                            .expect(&format!("no microcontroller with the name '{}' found", name));
+    let pack_info = pack_informations()
+        .unwrap()
+        .into_iter()
+        .find(|pack_info| pack_info.mcu_name == name)
+        .expect(&format!("no microcontroller with the name '{}' found", name));
     pack::load(&pack_info.path).expect("could not parse microcontroller pack")
 }
 
 /// Retrieves a list of `Mcu` objects in a directory containg `PACK_COLLECTIONS`.
 fn load_microcontrollers() -> Result<Vec<Mcu>, io::Error> {
-    let microcontrollers = pack_informations()?.into_iter()
+    let microcontrollers = pack_informations()?
+        .into_iter()
         .map(|pack_info| pack::load(&pack_info.path).unwrap())
         .collect();
 
@@ -77,10 +77,13 @@ fn pack_informations_from(path: &Path) -> Result<Vec<PackInfo>, io::Error> {
         pack_paths.extend(find_packs(&path.join(pack_name)).unwrap());
     }
 
-    Ok(pack_paths.into_iter().map(|path| PackInfo {
-        mcu_name: path.file_stem().unwrap().to_str().unwrap().to_lowercase().to_owned(),
-        path: path.to_owned(),
-    }).collect())
+    Ok(pack_paths
+        .into_iter()
+        .map(|path| PackInfo {
+            mcu_name: path.file_stem().unwrap().to_str().unwrap().to_lowercase().to_owned(),
+            path: path.to_owned(),
+        })
+        .collect())
 }
 
 /// Finds all pack files in a directory.
@@ -110,4 +113,3 @@ mod test {
         assert_eq!("ATmega328P", mcu.device.name);
     }
 }
-

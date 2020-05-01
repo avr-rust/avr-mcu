@@ -10,7 +10,7 @@ pub struct Mcu {
     /// The family that the mcu belongs to.
     pub architecture: Architecture,
     /// The C preprocessor name.
-    pub c_preprocessor_name: &'static str,
+    pub c_preprocessor_name: String,
 }
 
 /// Information fore a specific device.
@@ -161,7 +161,7 @@ pub enum ReadWrite {
     /// The register is read-only.
     ReadOnly,
     /// The register is write-only.
-    WriteOnly
+    WriteOnly,
 }
 
 /// An CPU or IO register.
@@ -197,7 +197,7 @@ pub struct Bitfield {
     /// The number of bytes that make up the bitfield.
     pub size: u32,
     /// reference into value_groups on the container
-    pub values: Option<String>
+    pub values: Option<String>,
 }
 
 /// A signal that is exposed on the outside of the package.
@@ -217,8 +217,23 @@ pub struct Signal {
 pub enum Architecture {
     Unknown,
 
-    Avr0, Avr1, Avr2, Avr25, Avr3, Avr31, Avr35, Avr4, Avr5, Avr51, Avr6,
-    Xmega2, Xmega3, Xmega4, Xmega5, Xmega6, Xmega7,
+    Avr0,
+    Avr1,
+    Avr2,
+    Avr25,
+    Avr3,
+    Avr31,
+    Avr35,
+    Avr4,
+    Avr5,
+    Avr51,
+    Avr6,
+    Xmega2,
+    Xmega3,
+    Xmega4,
+    Xmega5,
+    Xmega6,
+    Xmega7,
     Tiny,
 }
 
@@ -243,21 +258,25 @@ impl Mcu {
     }
 
     /// Gets an iterator over all register groups.
-    pub fn register_groups<'a>(&'a self) -> impl Iterator<Item=&'a RegisterGroup> {
+    pub fn register_groups<'a>(&'a self) -> impl Iterator<Item = &'a RegisterGroup> {
         self.modules.iter().flat_map(|m| m.register_groups.iter())
     }
 
     /// Gets an iterator over all registers.
-    pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
+    pub fn registers<'a>(&'a self) -> impl Iterator<Item = &'a Register> {
         self.register_groups().flat_map(|rg| rg.registers.iter())
     }
 
     /// Gets a port by letter.
     pub fn port(&self, letter: char) -> Port {
         let port_name = format!("PORT{}", letter);
-        let instance = self.port_peripheral().instance(&port_name)
+        let instance = self
+            .port_peripheral()
+            .instance(&port_name)
             .expect("no port instance with that letter found");
-        let register_group = self.port_module().register_group(&port_name)
+        let register_group = self
+            .port_module()
+            .register_group(&port_name)
             .expect("no port register group with that letter found");
         Port { instance, register_group }
     }
@@ -280,17 +299,19 @@ impl Peripheral {
     }
 
     /// Gets an iterator over all signals that the peripheral uses.
-    pub fn signals<'a>(&'a self) -> impl Iterator<Item=&'a Signal> {
+    pub fn signals<'a>(&'a self) -> impl Iterator<Item = &'a Signal> {
         self.instances.iter().flat_map(|i| i.signals.iter())
     }
 
-    pub fn instance_signal_with_pad(&self, pad: &str)
-        -> Option<(&Instance, &Signal)> {
+    pub fn instance_signal_with_pad(&self, pad: &str) -> Option<(&Instance, &Signal)> {
         self.instance_signals_on_pad(pad).next()
     }
 
     /// Gets a tuple of `(instance, signal)` pairs that use a pad by its name.
-    fn instance_signals_on_pad<'a>(&'a self, pad: &str) -> impl Iterator<Item=(&'a Instance, &'a Signal)> {
+    fn instance_signals_on_pad<'a>(
+        &'a self,
+        pad: &str,
+    ) -> impl Iterator<Item = (&'a Instance, &'a Signal)> {
         let mut instance_signals = Vec::new();
 
         for instance in self.instances.iter() {
@@ -311,7 +332,7 @@ impl Module {
     }
 
     /// Gets an iterator over all registers in the module.
-    pub fn registers<'a>(&'a self) -> impl Iterator<Item=&'a Register> {
+    pub fn registers<'a>(&'a self) -> impl Iterator<Item = &'a Register> {
         self.register_groups.iter().flat_map(|rg| rg.registers.iter())
     }
 }
@@ -319,8 +340,10 @@ impl Module {
 impl Register {
     /// Get the union between two descriptions of the same register.
     pub fn union(&self, with: &Self) -> Self {
-        assert_eq!(self.name, with.name,
-                   "can only take the union between different descriptions of the same register");
+        assert_eq!(
+            self.name, with.name,
+            "can only take the union between different descriptions of the same register"
+        );
 
         let mut result = self.clone();
 
@@ -335,12 +358,12 @@ impl Register {
 
 impl<'a> Port<'a> {
     /// Gets all associated registers.
-    pub fn registers(&'a self) -> impl Iterator<Item=&'a Register> {
+    pub fn registers(&'a self) -> impl Iterator<Item = &'a Register> {
         self.register_group.registers.iter()
     }
 
     /// Gets all associated signals.
-    pub fn signals(&'a self) -> impl Iterator<Item=&'a Signal> {
+    pub fn signals(&'a self) -> impl Iterator<Item = &'a Signal> {
         self.instance.signals.iter()
     }
 
@@ -351,17 +374,23 @@ impl<'a> Port<'a> {
 
     /// Gets the data direction register.
     pub fn ddr_register(&self) -> &Register {
-        self.registers().find(|r| r.name.starts_with("DDR")).expect("port does not have ddr register")
+        self.registers()
+            .find(|r| r.name.starts_with("DDR"))
+            .expect("port does not have ddr register")
     }
 
     /// Gets the port register.
     pub fn port_register(&self) -> &Register {
-        self.registers().find(|r| r.name.starts_with("PORT")).expect("port does not have port register")
+        self.registers()
+            .find(|r| r.name.starts_with("PORT"))
+            .expect("port does not have port register")
     }
 
     /// Gets the pin register.
     pub fn pin_register(&self) -> &Register {
-        self.registers().find(|r| r.name.starts_with("PIN")).expect("port does not have pin register")
+        self.registers()
+            .find(|r| r.name.starts_with("PIN"))
+            .expect("port does not have pin register")
     }
 }
 
@@ -369,7 +398,7 @@ impl Architecture {
     pub fn name(&self) -> &'static str {
         use Architecture::*;
 
-        match *self {
+        match self {
             Unknown => "<unknown architecture>",
             Avr0 => "avr0",
             Avr1 => "avr1",

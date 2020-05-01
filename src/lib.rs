@@ -36,19 +36,16 @@
 //! }
 //! ```
 
-#![feature(conservative_impl_trait)]
-
 extern crate xmltree;
 #[macro_use]
 extern crate lazy_static;
 
-pub use self::model::*;
 pub use self::load::{microcontroller, microcontroller_names, microcontrollers};
+pub use self::model::*;
 
+mod extra_info;
+mod load;
 mod model;
 mod pack;
-mod load;
-mod extra_info;
 
 pub mod current;
-

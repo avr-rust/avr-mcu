@@ -3,9 +3,9 @@ use super::*;
 use std::fs::File;
 use std::io;
 use std::io::prelude::*;
-use std::path::Path ;
+use std::path::Path;
 
-use xmltree::Element;
+use xmltree::{Element, XMLNode};
 
 pub fn load(path: &Path) -> Result<Mcu, io::Error> {
     let mut file = File::open(path)?;
@@ -22,8 +22,21 @@ fn read_pack(root: &Element) -> Mcu {
     let device_element = root.get_child("devices").unwrap().get_child("device").unwrap();
 
     let device = self::read_device(&device_element);
-    let variants = root.get_child("variants").unwrap().children.iter().map(self::read_variant).collect();
-    let modules = root.get_child("modules").unwrap().children.iter().map(self::read_module);
+    let variants = root
+        .get_child("variants")
+        .unwrap()
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .map(self::read_variant)
+        .collect();
+    let modules = root
+        .get_child("modules")
+        .unwrap()
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .map(self::read_module);
 
     // Not all desired information is available in pack files.
     // Grab the remaining bits from a lookup table.
@@ -41,55 +54,56 @@ fn read_pack(root: &Element) -> Mcu {
 fn read_device(device: &Element) -> Device {
     let device_name = device.attributes.get("name").unwrap().clone();
 
-    let peripherals = device.get_child("peripherals").unwrap()
-                        .children.iter()
-                        .map(self::read_peripheral)
-                        .collect();
+    let peripherals = device
+        .get_child("peripherals")
+        .unwrap()
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .map(self::read_peripheral)
+        .collect();
 
-    let address_spaces = device.get_child("address-spaces")
-                               .unwrap().children.iter()
-                               .map(self::read_address_space)
-                               .collect();
+    let address_spaces = device
+        .get_child("address-spaces")
+        .unwrap()
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .map(self::read_address_space)
+        .collect();
 
     let interrupts = device
         .get_child("interrupts")
         .unwrap()
         .children
         .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
         .map(self::read_interrupt)
         .collect();
 
-    Device {
-        name: device_name,
-        address_spaces: address_spaces,
-        peripherals,
-        interrupts,
-    }
+    Device { name: device_name, address_spaces: address_spaces, peripherals, interrupts }
 }
 
 fn read_interrupt(interrupt: &Element) -> Interrupt {
     let index: u32 = read_int(interrupt.attributes.get("index")).clone();
     Interrupt {
-        name: interrupt
-            .attributes
-            .get("name")
-            .unwrap_or(&format!("INT{}", index))
-            .clone(),
-        caption: interrupt
-            .attributes
-            .get("caption")
-            .unwrap_or(&format!("INT{}", index))
-            .clone(),
+        name: interrupt.attributes.get("name").unwrap_or(&format!("INT{}", index)).clone(),
+        caption: interrupt.attributes.get("caption").unwrap_or(&format!("INT{}", index)).clone(),
         index,
     }
 }
-
 
 fn read_peripheral(module: &Element) -> Peripheral {
     let name = module.attributes.get("name").unwrap().clone();
     let mut instances = Vec::new();
 
-    for child in module.children.iter() {
+    for child in module.children.iter().filter_map(|node| {
+        if let XMLNode::Element(el) = node {
+            Some(el)
+        } else {
+            None
+        }
+    }) {
         match &child.name[..] {
             "instance" => instances.push(read_instance(child)),
             // Unimplemented tags.
@@ -105,7 +119,13 @@ fn read_module(module: &Element) -> Module {
     let mut register_groups = Vec::new();
     let mut value_groups = Vec::new();
 
-    for child in module.children.iter() {
+    for child in module.children.iter().filter_map(|node| {
+        if let XMLNode::Element(el) = node {
+            Some(el)
+        } else {
+            None
+        }
+    }) {
         match &child.name[..] {
             "register-group" => register_groups.push(read_register_group(child)),
             "value-group" => value_groups.push(read_value_group(child)),
@@ -114,11 +134,7 @@ fn read_module(module: &Element) -> Module {
         }
     }
 
-    Module {
-        name: module_name,
-        register_groups: register_groups,
-        value_groups,
-    }
+    Module { name: module_name, register_groups: register_groups, value_groups }
 }
 
 fn read_variant(variant: &Element) -> Variant {
@@ -138,14 +154,16 @@ fn read_instance(instance: &Element) -> Instance {
     let instance_name = instance.attributes.get("name").unwrap().clone();
 
     let signals = match instance.get_child("signals") {
-        Some(signals) => signals.children.iter().map(read_signal).collect(),
-        None =>  Vec::new(),
+        Some(signals) => signals
+            .children
+            .iter()
+            .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+            .map(read_signal)
+            .collect(),
+        None => Vec::new(),
     };
 
-    Instance {
-        name: instance_name,
-        signals: signals,
-    }
+    Instance { name: instance_name, signals: signals }
 }
 
 fn read_signal(signal: &Element) -> Signal {
@@ -166,20 +184,23 @@ fn read_signal(signal: &Element) -> Signal {
 ///   <register caption="EEPROM Data Register" name="EEDR" offset="0x40" size="1" mask="0xFF"/>
 /// </register-group>
 fn read_register_group(register_group: &Element) -> RegisterGroup {
-    let (name, caption) = (register_group.attributes.get("name").unwrap(),
-                           register_group.attributes.get("caption").unwrap());
-    let registers = register_group.children.iter().filter_map(|child| match &child.name[..] {
-        "register" => Some(self::read_register(child)),
-        // FIXME: leave this out for now, ATtiny816 has nested register-group
-        // _ => panic!("unknown register-group child: '{}'", child.name),
-        _ => None,
-    }).collect();
+    let (name, caption) = (
+        register_group.attributes.get("name").unwrap(),
+        register_group.attributes.get("caption").unwrap(),
+    );
+    let registers = register_group
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .filter_map(|child| match &child.name[..] {
+            "register" => Some(self::read_register(child)),
+            // FIXME: leave this out for now, ATtiny816 has nested register-group
+            // _ => panic!("unknown register-group child: '{}'", child.name),
+            _ => None,
+        })
+        .collect();
 
-    RegisterGroup {
-        name: name.clone(),
-        caption: caption.clone(),
-        registers: registers,
-    }
+    RegisterGroup { name: name.clone(), caption: caption.clone(), registers: registers }
 }
 
 /// Reads a value group.
@@ -193,18 +214,21 @@ fn read_register_group(register_group: &Element) -> RegisterGroup {
 ///      </value-group>
 /// ```
 fn read_value_group(value_group: &Element) -> ValueGroup {
-    let (name, caption) = (value_group.attributes.get("name").unwrap(),
-                           value_group.attributes.get("caption").unwrap());
-    let values = value_group.children.iter().filter_map(|child| match &child.name[..] {
-        "value" => Some(self::read_value(child)),
-        _ => panic!("unknown value-group child: '{}'", child.name),
-    }).collect();
+    let (name, caption) = (
+        value_group.attributes.get("name").unwrap(),
+        value_group.attributes.get("caption").unwrap(),
+    );
+    let values = value_group
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .filter_map(|child| match &child.name[..] {
+            "value" => Some(self::read_value(child)),
+            _ => panic!("unknown value-group child: '{}'", child.name),
+        })
+        .collect();
 
-    ValueGroup {
-        name: name.clone(),
-        caption: caption.clone(),
-        values,
-    }
+    ValueGroup { name: name.clone(), caption: caption.clone(), values }
 }
 
 /// Reads a value.
@@ -222,7 +246,6 @@ fn read_value(value: &Element) -> Value {
     }
 }
 
-
 /// Reads a register.
 ///
 /// This looks like
@@ -238,10 +261,15 @@ fn read_register(register: &Element) -> Register {
         _ => ReadWrite::ReadAndWrite,
     };
 
-    let bitfields = register.children.iter().filter_map(|child| match &child.name[..] {
-        "bitfield" => Some(self::read_bitfield(child, byte_count)),
-        _ => None,
-    }).collect();
+    let bitfields = register
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .filter_map(|child| match &child.name[..] {
+            "bitfield" => Some(self::read_bitfield(child, byte_count)),
+            _ => None,
+        })
+        .collect();
 
     Register {
         name: register.attributes.get("name").unwrap().clone(),
@@ -285,7 +313,12 @@ fn read_address_space(address_space: &Element) -> AddressSpace {
     let id = address_space.attributes.get("id").unwrap().clone();
     let start_address = read_int(address_space.attributes.get("start"));
     let size = read_int(address_space.attributes.get("size"));
-    let segments = address_space.children.iter().map(read_memory_segment).collect();
+    let segments = address_space
+        .children
+        .iter()
+        .filter_map(|node| if let XMLNode::Element(el) = node { Some(el) } else { None })
+        .map(read_memory_segment)
+        .collect();
 
     AddressSpace {
         id: id,
@@ -316,30 +349,20 @@ fn read_memory_segment(memory_segment: &Element) -> MemorySegment {
     let writable = rw.contains("w") || rw.contains("W");
     let executable = exec == "1";
 
-    MemorySegment {
-        start_address, size, ty, name, readable, writable, executable,
-        page_size
-    }
+    MemorySegment { start_address, size, ty, name, readable, writable, executable, page_size }
 }
 
 fn read_int(value: Option<&String>) -> u32 {
     let value = value.unwrap();
 
-    if value.starts_with("0x") {
-        read_hex(Some(value))
-    } else {
-        value.parse().unwrap()
+    match value.starts_with("0x") {
+        true => read_hex(Some(value)),
+        false => value.parse().unwrap(),
     }
 }
 
 fn read_opt_int(value: Option<&String>) -> Option<u32> {
-    value.map(|v| {
-        if v.starts_with("0x") {
-            read_hex(Some(v))
-        } else {
-            v.parse().unwrap()
-        }
-    })
+    value.map(|v| if v.starts_with("0x") { read_hex(Some(v)) } else { v.parse().unwrap() })
 }
 
 fn read_hex(value: Option<&String>) -> u32 {
