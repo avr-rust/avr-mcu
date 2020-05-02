@@ -1,6 +1,6 @@
 [package]
 name = "avr-mcu"
-version = "0.2.6"
+version = "0.3.0"
 authors = ["Dylan McKay <me@dylanmckay.io>"]
 
 description = """
@@ -16,6 +16,6 @@ categories = ["embedded"]
 
 
 [dependencies]
-xmltree = "0.4"
-lazy_static = "0.2"
+xmltree = "0.10"
+lazy_static = "1.4"
 

@@ -3,304 +3,115 @@
 use Architecture;
 
 /// Information about a MCU.
-#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Info {
     /// The architecture.
     pub arch: Architecture,
-    pub c_preprocessor_name: &'static str,
+    pub c_preprocessor_name: String,
+}
+
+fn mmcu_from_mcu_name(mcu_name: &str) -> Architecture {
+    use Architecture::*;
+
+    match mcu_name.to_lowercase().as_ref() {
+        "at90s1200" | "attiny11" | "attiny12" | "attiny15" | "attiny28" => Avr1,
+
+        "at90s2313" | "at90s2323" | "at90s2333" | "at90s2343" | "attiny22" | "attiny26"
+        | "at90s4414" | "at90s4433" | "at90s4434" | "at90s8515" | "at90s8534" | "at90s8535" => Avr2,
+
+        "ata5272" | "ata6616c" | "attiny13" | "attiny13a" | "attiny2313" | "attiny2313a"
+        | "attiny24" | "attiny24a" | "attiny4313" | "attiny44" | "attiny44a" | "attiny441"
+        | "attiny84" | "attiny84a" | "attiny25" | "attiny45" | "attiny85" | "attiny261"
+        | "attiny261a" | "attiny461" | "attiny461a" | "attiny861" | "attiny861a" | "attiny43u"
+        | "attiny87" | "attiny48" | "attiny88" | "attiny828" | "attiny841" | "at86rf401" => Avr25,
+
+        "at43usb355" | "at76c711" => Avr3,
+
+        "atmega103" | "at43usb320" => Avr31,
+
+        "ata5505" | "ata6617c" | "ata664251" | "at90usb82" | "at90usb162" | "atmega8u2"
+        | "atmega16u2" | "atmega32u2" | "attiny167" | "attiny1634" => Avr35,
+
+        "ata6285" | "ata6286" | "ata6289" | "ata6612c" | "atmega8" | "atmega8a" | "atmega48"
+        | "atmega48a" | "atmega48p" | "atmega48pa" | "atmega48pb" | "atmega88" | "atmega88a"
+        | "atmega88p" | "atmega88pa" | "atmega88pb" | "atmega8515" | "atmega8535"
+        | "atmega8hva" | "at90pwm1" | "at90pwm2" | "at90pwm2b" | "at90pwm3" | "at90pwm3b"
+        | "at90pwm81" => Avr4,
+
+        "ata5700m322" | "ata5702m322" | "ata5782" | "ata5790" | "ata5790n" | "ata5791"
+        | "ata5795" | "ata5831" | "ata6613c" | "ata6614q" | "ata8210" | "ata8215" | "ata8510"
+        | "atmega16" | "atmega16a" | "atmega161" | "atmega162" | "atmega163" | "atmega164a"
+        | "atmega164p" | "atmega164pa" | "atmega165" | "atmega165a" | "atmega165p"
+        | "atmega165pa" | "atmega168" | "atmega168a" | "atmega168p" | "atmega168pa"
+        | "atmega168pb" | "atmega169" | "atmega169a" | "atmega169p" | "atmega169pa"
+        | "atmega16hvb" | "atmega16hvbrevb" | "atmega16m1" | "atmega16u4" | "atmega32a"
+        | "atmega32" | "atmega323" | "atmega324a" | "atmega324p" | "atmega324pa" | "atmega325"
+        | "atmega325a" | "atmega325p" | "atmega325pa" | "atmega3250" | "atmega3250a"
+        | "atmega3250p" | "atmega3250pa" | "atmega328" | "atmega328p" | "atmega328pb"
+        | "atmega329" | "atmega329a" | "atmega329p" | "atmega329pa" | "atmega3290"
+        | "atmega3290a" | "atmega3290p" | "atmega3290pa" | "atmega32c1" | "atmega32m1"
+        | "atmega32u4" | "atmega32u6" | "atmega406" | "atmega64" | "atmega64a" | "atmega640"
+        | "atmega644" | "atmega644a" | "atmega644p" | "atmega644pa" | "atmega645"
+        | "atmega645a" | "atmega645p" | "atmega6450" | "atmega6450a" | "atmega6450p"
+        | "atmega649" | "atmega649a" | "atmega649p" | "atmega6490" | "atmega16hva"
+        | "atmega16hva2" | "atmega32hvb" | "atmega6490a" | "atmega6490p" | "atmega64c1"
+        | "atmega64m1" | "atmega64hve" | "atmega64hve2" | "atmega64rfr2" | "atmega644rfr2"
+        | "atmega32hvbrevb" | "at90can32" | "at90can64" | "at90pwm161" | "at90pwm216"
+        | "at90pwm316" | "at90scr100" | "at90usb646" | "at90usb647" | "at94k" | "m3000" => Avr5,
+
+        "atmega128" | "atmega128a" | "atmega1280" | "atmega1281" | "atmega1284" | "atmega1284p"
+        | "atmega128rfa1" | "atmega128rfr2" | "atmega1284rfr2" | "at90can128" | "at90usb1286"
+        | "at90usb1287" => Avr51,
+
+        "atmega2560" | "atmega2561" | "atmega256rfr2" | "atmega2564rfr2" => Avr6,
+
+        "atxmega8e5" | "atxmega16a4" | "atxmega16d4" | "atxmega16e5" | "atxmega32a4"
+        | "atxmega32c3" | "atxmega32d3" | "atxmega32d4" | "atxmega16a4u" | "atxmega16c4"
+        | "atxmega32a4u" | "atxmega32c4" | "atxmega32e5" => Xmega2,
+
+        "attiny212" | "attiny214" | "attiny412" | "attiny414" | "attiny416" | "attiny417"
+        | "attiny814" | "attiny816" | "attiny817" | "attiny1614" | "attiny1616" | "attiny1617"
+        | "attiny3214" | "attiny3216" | "attiny3217" => Xmega3,
+
+        "atxmega64a3" | "atxmega64d3" | "atxmega64a3u" | "atxmega64a4u" | "atxmega64b1"
+        | "atxmega64b3" | "atxmega64c3" | "atxmega64d4" => Xmega4,
+
+        "atxmega64a1" | "atxmega64a1u" => Xmega5,
+
+        "atxmega128a3" | "atxmega128d3" | "atxmega192a3" | "atxmega192d3" | "atxmega256a3"
+        | "atxmega256a3b" | "atxmega256a3bu" | "atxmega256d3" | "atxmega128a3u"
+        | "atxmega128b1" | "atxmega128b3" | "atxmega128c3" | "atxmega128d4" | "atxmega192a3u"
+        | "atxmega192c3" | "atxmega256a3u" | "atxmega256c3" | "atxmega384c3" | "atxmega384d3" => {
+            Xmega6
+        }
+
+        "atxmega128a1" | "atxmega128a1u" | "atxmega128a4u" => Xmega7,
+
+        "attiny4" | "attiny5" | "attiny9" | "attiny10" | "attiny102" | "attiny20" | "attiny40" => {
+            Tiny
+        }
+
+        "ata8515" | "ata5781" | "ata5783" | "ata5787" | "ata5832" | "ata5833" | "ata5835"
+        | "atmega324pb" | "attiny104" | "attiny80" | "attiny840" => Unknown,
+
+        mcu_name => panic!("the AVR architecture name for MCU '{}' is unknown", mcu_name),
+    }
+}
+
+fn c_preprocessor_name_from_mcu_name(mcu_name: &str) -> String {
+    let proper_mcu_name = mcu_name
+        .to_uppercase()
+        .replace("XMEGA", "xmega")
+        .replace("MEGA", "mega")
+        .replace("TINY", "tiny");
+    format!("__AVR_{}__", proper_mcu_name)
 }
 
 /// Looks up extra information about a microcontroller.
-pub fn lookup<S>(mcu_name: S) -> Info where S: AsRef<str> {
-    match &mcu_name.as_ref().to_lowercase()[..] {
-        "at90s2313" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2313__" },
-        "at90s2323" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2323__" },
-        "at90s2333" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2333__" },
-        "at90s2343" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S2343__" },
-        "attiny22" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_ATtiny22__" },
-        "attiny26" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_ATtiny26__" },
-        "at90s4414" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S4414__" },
-        "at90s4433" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S4433__" },
-        "at90s4434" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S4434__" },
-        "at90s8515" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S8515__" },
-        "at90c8534" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90C8534__" },
-        "at90s8535" => Info { arch: Architecture::Avr2, c_preprocessor_name: "__AVR_AT90S8535__" },
-        "ata5272" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATA5272__" },
-        "ata6616c" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATA6616C__" },
-        "attiny13" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny13__" },
-        "attiny13a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny13A__" },
-        "attiny2313" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny2313__" },
-        "attiny2313a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny2313A__" },
-        "attiny24" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny24__" },
-        "attiny24a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny24A__" },
-        "attiny4313" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny4313__" },
-        "attiny44" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny44__" },
-        "attiny44a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny44A__" },
-        "attiny441" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny441__" },
-        "attiny80" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATtiny80__" },
-        "attiny84" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny84__" },
-        "attiny840" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATtiny840__" },
-        "attiny84a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny84A__" },
-        "attiny25" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny25__" },
-        "attiny45" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny45__" },
-        "attiny85" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny85__" },
-        "attiny261" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny261__" },
-        "attiny261a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny261A__" },
-        "attiny461" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny461__" },
-        "attiny461a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny461A__" },
-        "attiny861" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny861__" },
-        "attiny861a" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny861A__" },
-        "attiny43u" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny43U__" },
-        "attiny87" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny87__" },
-        "attiny48" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny48__" },
-        "attiny88" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny88__" },
-        "attiny828" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny828__" },
-        "attiny841" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_ATtiny841__" },
-        "at86rf401" => Info { arch: Architecture::Avr25, c_preprocessor_name: "__AVR_AT86RF401__" },
-        "at43usb355" => Info { arch: Architecture::Avr3, c_preprocessor_name: "__AVR_AT43USB355__" },
-        "at76c711" => Info { arch: Architecture::Avr3, c_preprocessor_name: "__AVR_AT76C711__" },
-        "atmega103" => Info { arch: Architecture::Avr31, c_preprocessor_name: "__AVR_ATmega103__" },
-        "at43usb320" => Info { arch: Architecture::Avr31, c_preprocessor_name: "__AVR_AT43USB320__" },
-        "ata5505" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATA5505__" },
-        "ata6617c" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATA6617C__" },
-        "ata664251" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATA664251__" },
-        "at90usb82" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_AT90USB82__" },
-        "at90usb162" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_AT90USB162__" },
-        "atmega8u2" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATmega8U2__" },
-        "atmega16u2" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATmega16U2__" },
-        "atmega32u2" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATmega32U2__" },
-        "attiny167" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATtiny167__" },
-        "attiny1634" => Info { arch: Architecture::Avr35, c_preprocessor_name: "__AVR_ATtiny1634__" },
-        "ata6285" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATA6285__" },
-        "ata6286" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATA6286__" },
-        "ata6289" => Info { arch: Architecture::Avr4, c_preprocessor_name: "__AVR_ATA6289__" },
-        "ata6612c" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATA6612C__" },
-        "atmega8" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega8__" },
-        "atmega8a" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega8A__" },
-        "atmega48" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega48__" },
-        "atmega48a" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega48A__" },
-        "atmega48p" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega48P__" },
-        "atmega48pa" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega48PA__" },
-        "atmega48pb" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega48PB__" },
-        "atmega88" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega88__" },
-        "atmega88a" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega88A__" },
-        "atmega88p" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega88P__" },
-        "atmega88pa" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega88PA__" },
-        "atmega88pb" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega88PB__" },
-        "atmega8515" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega8515__" },
-        "atmega8535" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega8535__" },
-        "atmega8hva" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_ATmega8HVA__" },
-        "at90pwm1" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM1__" },
-        "at90pwm2" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM2__" },
-        "at90pwm2b" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM2B__" },
-        "at90pwm3" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM3__" },
-        "at90pwm3b" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM3B__" },
-        "at90pwm81" => Info { arch: Architecture::Avr4,  c_preprocessor_name: "__AVR_AT90PWM81__" },
-        "ata5700m322" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5700M322__" },
-        "ata5702m322" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5702M322__" },
-        "ata5781" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5781__" },
-        "ata5782" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5782__" },
-        "ata5783" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5783__" },
-        "ata5787" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5787__" },
-        "ata5790" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5790__" },
-        "ata5790n" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5790N__" },
-        "ata5791" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5791__" },
-        "ata5795" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5795__" },
-        "ata5831" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA5831__" },
-        "ata5832" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5832__" },
-        "ata5833" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5833__" },
-        "ata5835" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA5835__" },
-        "ata6613c" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA6613C__" },
-        "ata6614q" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA6614Q__" },
-        "ata8210" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA8210__" },
-        "ata8215" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA8215__" },
-        "ata8510" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATA8510__" },
-        "ata8515" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATA8515__" },
-        "atmega16" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16__" },
-        "atmega16a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16A__" },
-        "atmega161" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega161__" },
-        "atmega162" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega162__" },
-        "atmega163" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega163__" },
-        "atmega164a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega164A__" },
-        "atmega164p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega164P__" },
-        "atmega164pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega164PA__" },
-        "atmega165" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega165__" },
-        "atmega165a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega165A__" },
-        "atmega165p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega165P__" },
-        "atmega165pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega165PA__" },
-        "atmega168" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega168__" },
-        "atmega168a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega168A__" },
-        "atmega168p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega168P__" },
-        "atmega168pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega168PA__" },
-        "atmega168pb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega168PB__" },
-        "atmega169" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega169__" },
-        "atmega169a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega169A__" },
-        "atmega169p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega169P__" },
-        "atmega169pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega169PA__" },
-        "atmega16hvb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16HVB__" },
-        "atmega16hvbrevb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16HVBREVB__" },
-        "atmega16m1" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16M1__" },
-        "atmega16u4" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16U4__" },
-        "atmega32a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32A__" },
-        "atmega32" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32__" },
-        "atmega323" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega323__" },
-        "atmega324a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega324A__" },
-        "atmega324p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega324P__" },
-        "atmega324pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega324PA__" },
-        "atmega324pb" => Info { arch: Architecture::Unknown, c_preprocessor_name: "__AVR_ATmega324PB__" },
-        "atmega325" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega325__" },
-        "atmega325a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega325A__" },
-        "atmega325p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega325P__" },
-        "atmega325pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega325PA__" },
-        "atmega3250" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3250__" },
-        "atmega3250a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3250A__" },
-        "atmega3250p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3250P__" },
-        "atmega3250pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3250PA__" },
-        "atmega328" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega328__" },
-        "atmega328p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega328P__" },
-        "atmega328pb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega328PB__" },
-        "atmega329" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega329__" },
-        "atmega329a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega329A__" },
-        "atmega329p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega329P__" },
-        "atmega329pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega329PA__" },
-        "atmega3290" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3290__" },
-        "atmega3290a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3290A__" },
-        "atmega3290p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3290P__" },
-        "atmega3290pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega3290PA__" },
-        "atmega32c1" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32C1__" },
-        "atmega32m1" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32M1__" },
-        "atmega32u4" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32U4__" },
-        "atmega32u6" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32U6__" },
-        "atmega406" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega406__" },
-        "atmega64" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64__" },
-        "atmega64a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64A__" },
-        "atmega640" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega640__" },
-        "atmega644" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega644__" },
-        "atmega644a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega644A__" },
-        "atmega644p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega644P__" },
-        "atmega644pa" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega644PA__" },
-        "atmega645" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega645__" },
-        "atmega645a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega645A__" },
-        "atmega645p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega645P__" },
-        "atmega6450" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6450__" },
-        "atmega6450a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6450A__" },
-        "atmega6450p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6450P__" },
-        "atmega649" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega649__" },
-        "atmega649a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega649A__" },
-        "atmega649p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega649P__" },
-        "atmega6490" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6490__" },
-        "atmega16hva" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16HVA__" },
-        "atmega16hva2" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega16HVA2__" },
-        "atmega32hvb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32HVB__" },
-        "atmega6490a" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6490A__" },
-        "atmega6490p" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega6490P__" },
-        "atmega64c1" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64C1__" },
-        "atmega64m1" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64M1__" },
-        "atmega64hve" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64HVE__" },
-        "atmega64hve2" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64HVE2__" },
-        "atmega64rfr2" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega64RFR2__" },
-        "atmega644rfr2" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega644RFR2__" },
-        "atmega32hvbrevb" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega32HVBREVB__" },
-        "at90can32" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90CAN32__" },
-        "at90can64" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90CAN64__" },
-        "at90pwm161" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90PWM161__" },
-        "at90pwm216" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90PWM216__" },
-        "at90pwm316" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90PWM316__" },
-        "at90scr100" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90SCR100__" },
-        "at90usb646" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90USB646__" },
-        "at90usb647" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT90USB647__" },
-        "at94k" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_AT94K__" },
-        "m3000" => Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_M3000__" },
-        "atmega128" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega128__" },
-        "atmega128a" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega128A__" },
-        "atmega1280" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega1280__" },
-        "atmega1281" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega1281__" },
-        "atmega1284" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega1284__" },
-        "atmega1284p" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega1284P__" },
-        "atmega128rfa1" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega128RFA1__" },
-        "atmega128rfr2" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega128RFR2__" },
-        "atmega1284rfr2" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_ATmega1284RFR2__" },
-        "at90can128" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_AT90CAN128__" },
-        "at90usb1286" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_AT90USB1286__" },
-        "at90usb1287" => Info { arch: Architecture::Avr51, c_preprocessor_name: "__AVR_AT90USB1287__" },
-        "atmega2560" => Info { arch: Architecture::Avr6, c_preprocessor_name: "__AVR_ATmega2560__" },
-        "atmega2561" => Info { arch: Architecture::Avr6, c_preprocessor_name: "__AVR_ATmega2561__" },
-        "atmega256rfr2" => Info { arch: Architecture::Avr6, c_preprocessor_name: "__AVR_ATmega256RFR2__" },
-        "atmega2564rfr2" => Info { arch: Architecture::Avr6, c_preprocessor_name: "__AVR_ATmega2564RFR2__" },
-        "atxmega8e5" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega8E5__" },
-        "atxmega16a4" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega16A4__" },
-        "atxmega16d4" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega16D4__" },
-        "atxmega16e5" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega16E5__" },
-        "atxmega32a4" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega32A4__" },
-        "atxmega32c3" => Info { arch: Architecture::Xmega2,  c_preprocessor_name: "__AVR_ATxmega32C3__" },
-        "atxmega32d3" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega32D3__" },
-        "atxmega32d4" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega32D4__" },
-        "atxmega16a4u" => Info { arch: Architecture::Xmega2,  c_preprocessor_name: "__AVR_ATxmega16A4U__" },
-        "atxmega16c4" => Info { arch: Architecture::Xmega2,  c_preprocessor_name: "__AVR_ATxmega16C4__" },
-        "atxmega32a4u" => Info { arch: Architecture::Xmega2,  c_preprocessor_name: "__AVR_ATxmega32A4U__" },
-        "atxmega32c4" => Info { arch: Architecture::Xmega2,  c_preprocessor_name: "__AVR_ATxmega32C4__" },
-        "atxmega32e5" => Info { arch: Architecture::Xmega2, c_preprocessor_name: "__AVR_ATxmega32E5__" },
-        "attiny212" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny212__" },
-        "attiny214" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny214__" },
-        "attiny412" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny412__" },
-        "attiny414" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny414__" },
-        "attiny416" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny416__" },
-        "attiny417" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny417__" },
-        "attiny814" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny814__" },
-        "attiny816" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny816__" },
-        "attiny817" => Info { arch: Architecture::Xmega3, c_preprocessor_name: "__AVR_ATtiny817__" },
-        "attiny1614" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny1614__" },
-        "attiny1616" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny1616__" },
-        "attiny1617" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny1617__" },
-        "attiny3214" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny3214__" },
-        "attiny3216" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny3216__" },
-        "attiny3217" => Info { arch: Architecture::Xmega3,  c_preprocessor_name: "__AVR_ATtiny3217__" },
-        "atxmega64a3" => Info { arch: Architecture::Xmega4, c_preprocessor_name: "__AVR_ATxmega64A3__" },
-        "atxmega64d3" => Info { arch: Architecture::Xmega4, c_preprocessor_name: "__AVR_ATxmega64D3__" },
-        "atxmega64a3u" => Info { arch: Architecture::Xmega4,  c_preprocessor_name: "__AVR_ATxmega64A3U__" },
-        "atxmega64a4u" => Info { arch: Architecture::Xmega4,  c_preprocessor_name: "__AVR_ATxmega64A4U__" },
-        "atxmega64b1" => Info { arch: Architecture::Xmega4,  c_preprocessor_name: "__AVR_ATxmega64B1__" },
-        "atxmega64b3" => Info { arch: Architecture::Xmega4,  c_preprocessor_name: "__AVR_ATxmega64B3__" },
-        "atxmega64c3" => Info { arch: Architecture::Xmega4,  c_preprocessor_name: "__AVR_ATxmega64C3__" },
-        "atxmega64d4" => Info { arch: Architecture::Xmega4, c_preprocessor_name: "__AVR_ATxmega64D4__" },
-        "atxmega64a1" => Info { arch: Architecture::Xmega5, c_preprocessor_name: "__AVR_ATxmega64A1__" },
-        "atxmega64a1u" => Info { arch: Architecture::Xmega5,  c_preprocessor_name: "__AVR_ATxmega64A1U__" },
-        "atxmega128a3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega128A3__" },
-        "atxmega128d3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega128D3__" },
-        "atxmega192a3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega192A3__" },
-        "atxmega192d3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega192D3__" },
-        "atxmega256a3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega256A3__" },
-        "atxmega256a3b" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega256A3B__" },
-        "atxmega256a3bu" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega256A3BU__" },
-        "atxmega256d3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega256D3__" },
-        "atxmega128a3u" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega128A3U__" },
-        "atxmega128b1" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega128B1__" },
-        "atxmega128b3" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega128B3__" },
-        "atxmega128c3" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega128C3__" },
-        "atxmega128d4" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega128D4__" },
-        "atxmega192a3u" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega192A3U__" },
-        "atxmega192c3" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega192C3__" },
-        "atxmega256a3u" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega256A3U__" },
-        "atxmega256c3" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega256C3__" },
-        "atxmega384c3" => Info { arch: Architecture::Xmega6,  c_preprocessor_name: "__AVR_ATxmega384C3__" },
-        "atxmega384d3" => Info { arch: Architecture::Xmega6, c_preprocessor_name: "__AVR_ATxmega384D3__" },
-        "atxmega128a1" => Info { arch: Architecture::Xmega7, c_preprocessor_name: "__AVR_ATxmega128A1__" },
-        "atxmega128a1u" => Info { arch: Architecture::Xmega7,  c_preprocessor_name: "__AVR_ATxmega128A1U__" },
-        "atxmega128a4u" => Info { arch: Architecture::Xmega7,  c_preprocessor_name: "__AVR_ATxmega128A4U__" },
-        "attiny4" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny4__" },
-        "attiny5" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny5__" },
-        "attiny9" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny9__" },
-        "attiny10" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny10__" },
-        "attiny102" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny102__" },
-        "attiny104" => Info { arch: Architecture::Unknown,  c_preprocessor_name: "__AVR_ATtiny104__" },
-        "attiny20" => Info { arch: Architecture::Tiny,  c_preprocessor_name: "__AVR_ATtiny20__" },
-        "attiny40" => Info { arch: Architecture::Tiny, c_preprocessor_name: "__AVR_ATtiny40__" },
-        "at90s1200" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_AT90S1200__" },
-        "attiny11" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny11__" },
-        "attiny12" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny12__" },
-        "attiny15" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny15__" },
-        "attiny28" => Info { arch: Architecture::Avr1, c_preprocessor_name: "__AVR_ATtiny28__" },
-        mcu_name => panic!("the AVR architecture name for MCU '{}' is unknown", mcu_name),
+pub fn lookup<T: AsRef<str>>(mcu_name: T) -> Info {
+    Info {
+        arch: mmcu_from_mcu_name(mcu_name.as_ref()),
+        c_preprocessor_name: c_preprocessor_name_from_mcu_name(mcu_name.as_ref()),
     }
 }
 
@@ -312,16 +123,15 @@ mod test {
 
     #[test]
     fn atmega328_makes_sense() {
-        assert_eq!(Info {
-            arch: Architecture::Avr5,
-            c_preprocessor_name: "__AVR_ATmega328__" }, lookup("atmega328"));
+        assert_eq!(
+            Info { arch: Architecture::Avr5, c_preprocessor_name: "__AVR_ATmega328__".to_string() },
+            lookup("ATmega328")
+        );
     }
 
     #[test]
     fn matches_upper_and_lowercase() {
-        let a = lookup("attiny85");
-        let b = lookup("ATtiny85");
-        assert_eq!(a, b);
+        assert_eq!(lookup("ATtiny85"), lookup("ATtiny85"));
     }
 
     #[test]
@@ -338,9 +148,10 @@ mod test {
     fn there_is_a_constant_number_of_unknown_architectures() {
         const EXPECTED_UNKOWNS: usize = 11;
 
-        let unknown_count = microcontroller_names().iter()
+        let unknown_count = microcontroller_names()
+            .iter()
             .map(self::lookup)
-            .filter(|info| if let Architecture::Unknown = info.arch { true } else { false })
+            .filter(|info| info.arch == Architecture::Unknown)
             .count();
         assert_eq!(EXPECTED_UNKOWNS, unknown_count);
     }
