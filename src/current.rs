@@ -25,19 +25,11 @@ pub fn mcu() -> Option<Mcu> {
 /// * `Some("attiny85")`
 /// * `None`
 pub fn mcu_name() -> Option<String> {
-    // TARGET environment variable should contain the value that was specified
-    // by --target X(C)argo option. Normally it's the name of .json file
-    // containing custom target specification, e. g. atmega88pa.json
-    // So in order to work, the name of *.json file should be the same
-    // as the name of your MCU
-    let target = env::var("TARGET").expect(
-        "cannot retrieve mcu name, please, pass --target \
-         flag to Cargo, e. g. \"--target atmega88pa\"",
-    );
-    let is_avr = env::var("CARGO_CFG_TARGET_ARCH").unwrap() == "avr";
-
-    match is_avr {
-        true => Some(target),
-        false => None,
-    }
+    target_cpu_fetch::target_cpu().ok().and_then(|o| o)
 }
+
+/// Checks if the current cargo target architecture is AVR.
+pub fn is_compiling_for_avr() -> bool {
+    env::var("CARGO_CFG_TARGET_ARCH").unwrap() == "avr"
+}
+

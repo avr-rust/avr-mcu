@@ -16,6 +16,8 @@ categories = ["embedded"]
 
 
 [dependencies]
-xmltree = "0.10"
+json = "0.12"
 lazy_static = "1.4"
+target-cpu-fetch = "0.1.0"
+xmltree = "0.10"
 
