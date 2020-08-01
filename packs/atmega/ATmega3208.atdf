@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:NumHelper="NumHelper" xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="schema/avr_tools_device_file.xsd">
   <variants>
-    <variant ordercode="ATmega4808-AFR" package="TQFP32" pinout="QFP32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
-    <variant ordercode="ATmega4808-MFR" package="VQFN32" pinout="QFN32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
-    <variant ordercode="ATmega4808-XFR" package="SSOP28" pinout="SSOP28" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega3208-AFR" package="TQFP32" pinout="QFP32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega3208-MFR" package="VQFN32" pinout="QFN32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega3208-XFR" package="SSOP28" pinout="SSOP28" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
   </variants>
   <devices>
-    <device architecture="AVR8X" family="AVR MEGA" name="ATmega4808">
+    <device architecture="AVR8X" family="AVR MEGA" name="ATmega3208">
       <address-spaces>
         <address-space endianness="little" id="data" name="data" size="0x10000" start="0x0000">
           <memory-segment exec="0" name="EEPROM" pagesize="0x40" rw="RW" size="0x0100" start="0x00001400" type="eeprom"/>
           <memory-segment exec="0" name="FUSES" pagesize="0x40" rw="RW" size="0xA" start="0x00001280" type="fuses"/>
-          <memory-segment exec="0" name="INTERNAL_SRAM" rw="RW" size="0x1800" start="0x2800" type="ram"/>
+          <memory-segment exec="0" name="INTERNAL_SRAM" rw="RW" size="0x1000" start="0x3000" type="ram"/>
           <memory-segment exec="0" name="IO" rw="RW" size="0x1100" start="0x00000000" type="io"/>
           <memory-segment exec="0" name="LOCKBITS" pagesize="0x40" rw="RW" size="0x1" start="0x0000128A" type="lockbits"/>
-          <memory-segment exec="0" name="MAPPED_PROGMEM" pagesize="0x80" rw="R" size="0xC000" start="0x00004000" type="other"/>
+          <memory-segment exec="0" name="MAPPED_PROGMEM" pagesize="0x80" rw="R" size="0x8000" start="0x00004000" type="other"/>
           <memory-segment exec="0" name="PROD_SIGNATURES" pagesize="0x80" rw="R" size="0x7D" start="0x00001103" type="signatures"/>
           <memory-segment exec="0" name="SIGNATURES" pagesize="0x80" rw="R" size="0x3" start="0x00001100" type="signatures"/>
           <memory-segment exec="0" name="USER_SIGNATURES" pagesize="0x40" rw="RW" size="0x40" start="0x00001300" type="user_signatures"/>
         </address-space>
-        <address-space endianness="little" id="prog" name="prog" size="0xC000" start="0x0000">
-          <memory-segment exec="1" name="PROGMEM" pagesize="0x80" rw="RW" size="0xC000" start="0x00000000" type="flash"/>
+        <address-space endianness="little" id="prog" name="prog" size="0x8000" start="0x0000">
+          <memory-segment exec="1" name="PROGMEM" pagesize="0x80" rw="RW" size="0x8000" start="0x00000000" type="flash"/>
         </address-space>
       </address-spaces>
       <peripherals>
@@ -447,8 +447,8 @@
         </property-group>
         <property-group name="SIGNATURES">
           <property name="SIGNATURE0" value="0x1E"/>
-          <property name="SIGNATURE1" value="0x96"/>
-          <property name="SIGNATURE2" value="0x50"/>
+          <property name="SIGNATURE1" value="0x95"/>
+          <property name="SIGNATURE2" value="0x30"/>
         </property-group>
       </property-groups>
     </device>

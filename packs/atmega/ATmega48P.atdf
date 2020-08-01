@@ -209,6 +209,9 @@
             <signals>
               <signal group="CLK" index="0" function="default" pad="PB0"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="FUSE">
@@ -507,7 +510,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
         </register>
       </register-group>
@@ -536,7 +539,7 @@
           <bitfield caption="USART Data register Empty Interrupt Enable" mask="0x20" name="UDRIE0"/>
           <bitfield caption="Receiver Enable" mask="0x10" name="RXEN0"/>
           <bitfield caption="Transmitter Enable" mask="0x08" name="TXEN0"/>
-          <bitfield caption="Character Size" mask="0x04" name="UCSZ02"/>
+          <bitfield caption="Character Size - together with UCSZ0 in UCSR0C" mask="0x04" name="UCSZ02"/>
           <bitfield caption="Receive Data Bit 8" mask="0x02" name="RXB80"/>
           <bitfield caption="Transmit Data Bit 8" mask="0x01" name="TXB80"/>
         </register>
@@ -544,7 +547,7 @@
           <bitfield caption="USART Mode Select" mask="0xC0" name="UMSEL0" values="COMM_USART_MODE_2BIT"/>
           <bitfield caption="Parity Mode Bits" mask="0x30" name="UPM0" values="COMM_UPM_PARITY_MODE"/>
           <bitfield caption="Stop Bit Select" mask="0x08" name="USBS0" values="COMM_STOP_BIT_SEL"/>
-          <bitfield caption="Character Size" mask="0x06" name="UCSZ0"/>
+          <bitfield caption="Character Size - together with UCSZ2 in UCSR0B" mask="0x06" name="UCSZ0"/>
           <bitfield caption="Clock Polarity" mask="0x01" name="UCPOL0"/>
         </register>
         <register caption="USART Baud Rate Register  Bytes" name="UBRR0" offset="0xC4" size="2" mask="0x0FFF"/>
@@ -1034,9 +1037,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
   </modules>
   <pinouts>

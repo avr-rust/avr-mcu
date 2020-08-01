@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:NumHelper="NumHelper" xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="schema/avr_tools_device_file.xsd">
   <variants>
-    <variant ordercode="ATmega4808-AFR" package="TQFP32" pinout="QFP32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
-    <variant ordercode="ATmega4808-MFR" package="VQFN32" pinout="QFN32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
-    <variant ordercode="ATmega4808-XFR" package="SSOP28" pinout="SSOP28" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega808-AFR" package="TQFP32" pinout="QFP32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega808-MFR" package="VQFN32" pinout="QFN32" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
+    <variant ordercode="ATmega808-XFR" package="SSOP28" pinout="SSOP28" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
   </variants>
   <devices>
-    <device architecture="AVR8X" family="AVR MEGA" name="ATmega4808">
+    <device architecture="AVR8X" family="AVR MEGA" name="ATmega808">
       <address-spaces>
-        <address-space endianness="little" id="data" name="data" size="0x10000" start="0x0000">
-          <memory-segment exec="0" name="EEPROM" pagesize="0x40" rw="RW" size="0x0100" start="0x00001400" type="eeprom"/>
-          <memory-segment exec="0" name="FUSES" pagesize="0x40" rw="RW" size="0xA" start="0x00001280" type="fuses"/>
-          <memory-segment exec="0" name="INTERNAL_SRAM" rw="RW" size="0x1800" start="0x2800" type="ram"/>
+        <address-space endianness="little" id="data" name="data" size="0x2000" start="0x0000">
+          <memory-segment exec="0" name="EEPROM" pagesize="0x20" rw="RW" size="0x0100" start="0x00001400" type="eeprom"/>
+          <memory-segment exec="0" name="FUSES" pagesize="0x20" rw="RW" size="0xA" start="0x00001280" type="fuses"/>
+          <memory-segment exec="0" name="INTERNAL_SRAM" rw="RW" size="0x0400" start="0x3c00" type="ram"/>
           <memory-segment exec="0" name="IO" rw="RW" size="0x1100" start="0x00000000" type="io"/>
-          <memory-segment exec="0" name="LOCKBITS" pagesize="0x40" rw="RW" size="0x1" start="0x0000128A" type="lockbits"/>
-          <memory-segment exec="0" name="MAPPED_PROGMEM" pagesize="0x80" rw="R" size="0xC000" start="0x00004000" type="other"/>
-          <memory-segment exec="0" name="PROD_SIGNATURES" pagesize="0x80" rw="R" size="0x7D" start="0x00001103" type="signatures"/>
-          <memory-segment exec="0" name="SIGNATURES" pagesize="0x80" rw="R" size="0x3" start="0x00001100" type="signatures"/>
-          <memory-segment exec="0" name="USER_SIGNATURES" pagesize="0x40" rw="RW" size="0x40" start="0x00001300" type="user_signatures"/>
+          <memory-segment exec="0" name="LOCKBITS" pagesize="0x20" rw="RW" size="0x1" start="0x0000128A" type="lockbits"/>
+          <memory-segment exec="0" name="MAPPED_PROGMEM" pagesize="0x40" rw="R" size="0x2000" start="0x00004000" type="other"/>
+          <memory-segment exec="0" name="PROD_SIGNATURES" pagesize="0x40" rw="R" size="0x3D" start="0x00001103" type="signatures"/>
+          <memory-segment exec="0" name="SIGNATURES" pagesize="0x40" rw="R" size="0x3" start="0x00001100" type="signatures"/>
+          <memory-segment exec="0" name="USER_SIGNATURES" pagesize="0x20" rw="RW" size="0x20" start="0x00001300" type="user_signatures"/>
         </address-space>
-        <address-space endianness="little" id="prog" name="prog" size="0xC000" start="0x0000">
-          <memory-segment exec="1" name="PROGMEM" pagesize="0x80" rw="RW" size="0xC000" start="0x00000000" type="flash"/>
+        <address-space endianness="little" id="prog" name="prog" size="0x2000" start="0x0000">
+          <memory-segment exec="1" name="PROGMEM" pagesize="0x40" rw="RW" size="0x2000" start="0x00000000" type="flash"/>
         </address-space>
       </address-spaces>
       <peripherals>
@@ -67,29 +67,29 @@
           <instance name="CCL">
             <register-group address-space="data" name="CCL" name-in-module="CCL" offset="0x01C0"/>
             <signals>
-              <signal function="CCL" group="LUT0_IN" index="0" pad="PA0"/>
-              <signal function="CCL" group="LUT0_IN" index="1" pad="PA1"/>
-              <signal function="CCL" group="LUT0_IN" index="2" pad="PA2"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT0" function="CCL" group="LUT0_IN" index="0" pad="PA0"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT0" function="CCL" group="LUT0_IN" index="1" pad="PA1"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT0" function="CCL" group="LUT0_IN" index="2" pad="PA2"/>
               <signal field="PORTMUX.CCLROUTEA.LUT0" function="CCL_ALT" group="LUT0_OUT" index="0" pad="PA6"/>
               <signal field="PORTMUX.CCLROUTEA.LUT0" function="CCL" group="LUT0_OUT" index="0" pad="PA3"/>
-              <signal function="CCL" group="LUT1_IN" index="0" pad="PC0"/>
-              <signal function="CCL" group="LUT1_IN" index="1" pad="PC1"/>
-              <signal function="CCL" group="LUT1_IN" index="2" pad="PC2"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT1" function="CCL" group="LUT1_IN" index="0" pad="PC0"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT1" function="CCL" group="LUT1_IN" index="1" pad="PC1"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT1" function="CCL" group="LUT1_IN" index="2" pad="PC2"/>
               <signal field="PORTMUX.CCLROUTEA.LUT1" function="CCL" group="LUT1_OUT" index="0" pad="PC3"/>
-              <signal function="CCL" group="LUT2_IN" index="0" pad="PD0"/>
-              <signal function="CCL" group="LUT2_IN" index="1" pad="PD1"/>
-              <signal function="CCL" group="LUT2_IN" index="2" pad="PD2"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT2" function="CCL" group="LUT2_IN" index="0" pad="PD0"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT2" function="CCL" group="LUT2_IN" index="1" pad="PD1"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT2" function="CCL" group="LUT2_IN" index="2" pad="PD2"/>
               <signal field="PORTMUX.CCLROUTEA.LUT2" function="CCL" group="LUT2_OUT" index="0" pad="PD3"/>
               <signal field="PORTMUX.CCLROUTEA.LUT2" function="CCL_ALT" group="LUT2_OUT" index="1" pad="PD6"/>
-              <signal function="CCL" group="LUT3_IN" index="0" pad="PF0"/>
-              <signal function="CCL" group="LUT3_IN" index="1" pad="PF1"/>
-              <signal function="CCL" group="LUT3_IN" index="2" pad="PF2"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT3" function="CCL" group="LUT3_IN" index="0" pad="PF0"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT3" function="CCL" group="LUT3_IN" index="1" pad="PF1"/>
+              <signal field="PORTMUX.CCLROUTEA.LUT3" function="CCL" group="LUT3_IN" index="2" pad="PF2"/>
               <signal field="PORTMUX.CCLROUTEA.LUT3" function="CCL_ALT" group="LUT3_OUT" index="1" pad="PF6"/>
               <signal field="PORTMUX.CCLROUTEA.LUT3" function="CCL" group="LUT3_OUT" index="1" pad="PF3"/>
             </signals>
           </instance>
         </module>
-        <module id="I2600" name="CLKCTRL">
+        <module id="I2113" name="CLKCTRL">
           <instance name="CLKCTRL">
             <register-group address-space="data" name="CLKCTRL" name-in-module="CLKCTRL" offset="0x0060"/>
             <signals>
@@ -118,7 +118,7 @@
             <register-group address-space="data" name="CRCSCAN" name-in-module="CRCSCAN" offset="0x0120"/>
           </instance>
         </module>
-        <module id="I2600" name="EVSYS">
+        <module id="I2118" name="EVSYS">
           <instance name="EVSYS">
             <register-group address-space="data" name="EVSYS" name-in-module="EVSYS" offset="0x0180"/>
             <signals>
@@ -441,14 +441,15 @@
         </property-group>
         <property-group name="PROGRAMMING_INFO">
           <property name="FUSE_ENABLED_VALUE" value="1"/>
+          <property name="INTERRUPT_VECTOR_SIZE" value="4"/>
         </property-group>
         <property-group name="UPDI_INTERFACE">
           <property name="PROGMEM_OFFSET" value="0x00004000"/>
         </property-group>
         <property-group name="SIGNATURES">
           <property name="SIGNATURE0" value="0x1E"/>
-          <property name="SIGNATURE1" value="0x96"/>
-          <property name="SIGNATURE2" value="0x50"/>
+          <property name="SIGNATURE1" value="0x93"/>
+          <property name="SIGNATURE2" value="0x26"/>
         </property-group>
       </property-groups>
     </device>
@@ -869,7 +870,7 @@
         <value caption="RS Latch" name="RS" value="0x04"/>
       </value-group>
     </module>
-    <module caption="Clock controller" id="I2600" name="CLKCTRL">
+    <module caption="Clock controller" id="I2113" name="CLKCTRL">
       <register-group caption="Clock controller" name="CLKCTRL" size="0x20">
         <register caption="MCLK Control A" initval="0x00" name="MCLKCTRLA" offset="0x00" rw="RW" size="1">
           <bitfield caption="System clock out" mask="0x80" name="CLKOUT" rw="RW"/>
@@ -892,7 +893,7 @@
         <register caption="OSC20M Calibration A" initval="0x00" name="OSC20MCALIBA" offset="0x11" rw="RW" size="1">
           <bitfield caption="Calibration" mask="0x7f" name="CAL20M" rw="RW"/>
         </register>
-        <register caption="OSC20M Calibration B" name="OSC20MCALIBB" offset="0x12" rw="RW" size="1">
+        <register caption="OSC20M Calibration B" initval="0x00" name="OSC20MCALIBB" offset="0x12" rw="RW" size="1">
           <bitfield caption="Lock" mask="0x80" name="LOCK" rw="RW"/>
           <bitfield caption="Oscillator temperature coefficient" mask="0xf" name="TEMPCAL20M" rw="RW"/>
         </register>
@@ -999,7 +1000,7 @@
         <value caption="CRC on boot section of flash" name="BOOT" value="0x2"/>
       </value-group>
     </module>
-    <module caption="Event System" id="I2600" name="EVSYS">
+    <module caption="Event System" id="I2118" name="EVSYS">
       <register-group caption="Event System" name="EVSYS" size="0x40">
         <register caption="Multiplexer Channel 0" initval="0x00" name="CHANNEL0" offset="0x10" rw="RW" size="1">
           <bitfield caption="Generator selector" mask="0xff" name="GENERATOR" rw="RW" values="EVSYS_GENERATOR"/>
@@ -2243,7 +2244,7 @@
         <value caption="Voltage reference at 2.5V" name="2V5" value="0x02"/>
         <value caption="Voltage reference at 4.34V" name="4V34" value="0x03"/>
         <value caption="Voltage reference at 1.5V" name="1V5" value="0x04"/>
-        <value caption="AVDD" name="AVDD" value="0x07"/>
+        <value caption="AVDD as Voltage reference" name="AVDD" value="0x07"/>
       </value-group>
       <value-group caption="ADC0 reference select select" name="VREF_ADC0REFSEL">
         <value caption="Voltage reference at 0.55V" name="0V55" value="0x00"/>

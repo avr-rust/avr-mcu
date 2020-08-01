@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:xalan="http://xml.apache.org/xalan" xmlns:NumHelper="NumHelper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="../../schema/avr_tools_device_file.xsd">
   <variants>
-    <variant tempmin="0" tempmax="0" speedmax="0" package="" ordercode="standard" vccmin="1.8" vccmax="3.6"/>
+    <variant ordercode="ATmega2564RFR2-ZU" package="VQFN48" speedmax="16000000" tempmax="85" tempmin="-40" vccmax="3.6" vccmin="1.8"/>
+    <variant ordercode="ATmega2564RFR2-ZUR" package="VQFN48" speedmax="16000000" tempmax="85" tempmin="-40" vccmax="3.6" vccmin="1.8"/>
+    <variant ordercode="ATmega2564RFR2-ZF" package="VQFN48" speedmax="16000000" tempmax="125" tempmin="-40" vccmax="3.6" vccmin="1.8"/>
+    <variant ordercode="ATmega2564RFR2-ZFR" package="VQFN48" speedmax="16000000" tempmax="125" tempmin="-40" vccmax="3.6" vccmin="1.8"/>
   </variants>
   <devices>
     <device name="ATmega2564RFR2" architecture="AVR8" family="megaAVR">
@@ -158,6 +161,9 @@
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V3"/>
+            </parameters>
           </instance>
         </module>
         <module name="FLASH">
@@ -497,7 +503,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -2303,9 +2309,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="16.0 MHz" name="16_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V3"/>
-      </parameters>
+
     </module>
     <module caption="FLASH Controller" name="FLASH">
       <register-group caption="FLASH Controller" name="FLASH">

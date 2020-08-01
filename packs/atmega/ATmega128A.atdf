@@ -88,6 +88,9 @@
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="BOOT_LOAD">
@@ -593,7 +596,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -854,9 +857,7 @@
         <value caption="Standby" name="STDBY" value="0x05"/>
         <value caption="Extended Standby" name="ESTDBY" value="0x07"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
     <module caption="Bootloader" name="BOOT_LOAD">
       <register-group caption="Bootloader" name="BOOT_LOAD">
@@ -1073,9 +1074,9 @@
           <bitfield caption="Timer/Counter3, Output Compare Match Interrupt Enable" mask="0x02" name="OCIE3C"/>
         </register>
         <register caption="Extended Timer/Counter Interrupt Flag register" name="ETIFR" offset="0x7C" size="1" ocd-rw="R">
-          <bitfield caption="Input Capture Flag 1" mask="0x20" name="ICF3"/>
-          <bitfield caption="Output Compare Flag 1A" mask="0x10" name="OCF3A"/>
-          <bitfield caption="Output Compare Flag 1B" mask="0x08" name="OCF3B"/>
+          <bitfield caption="Input Capture Flag 3" mask="0x20" name="ICF3"/>
+          <bitfield caption="Output Compare Flag 3A" mask="0x10" name="OCF3A"/>
+          <bitfield caption="Output Compare Flag 3B" mask="0x08" name="OCF3B"/>
           <bitfield caption="Timer/Counter3 Overflow Flag" mask="0x04" name="TOV3"/>
           <bitfield caption="Timer/Counter3 Output Compare C Match Flag" mask="0x02" name="OCF3C"/>
         </register>

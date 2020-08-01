@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><avr-tools-device-file xmlns:NumHelper="NumHelper" xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="schema/avr_tools_device_file.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<avr-tools-device-file xmlns:NumHelper="NumHelper" xmlns:xalan="http://xml.apache.org/xalan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="schema/avr_tools_device_file.xsd">
   <variants>
     <variant ordercode="ATmega4809-AFR" package="TQFP48" pinout="QFP48" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
     <variant ordercode="ATmega4809-MFR" package="UQFN48" pinout="QFN48" speedmax="20000000" tempmax="105" tempmin="-40" vccmax="5.0" vccmin="1.8"/>
@@ -6,7 +7,7 @@
   <devices>
     <device architecture="AVR8X" family="AVR MEGA" name="ATmega4809">
       <address-spaces>
-        <address-space endianness="little" id="data" name="data" size="0xC000" start="0x0000">
+        <address-space endianness="little" id="data" name="data" size="0x10000" start="0x0000">
           <memory-segment exec="0" name="EEPROM" pagesize="0x40" rw="RW" size="0x0100" start="0x00001400" type="eeprom"/>
           <memory-segment exec="0" name="FUSES" pagesize="0x40" rw="RW" size="0xA" start="0x00001280" type="fuses"/>
           <memory-segment exec="0" name="INTERNAL_SRAM" rw="RW" size="0x1800" start="0x2800" type="ram"/>
@@ -106,6 +107,9 @@
         <module id="I2100" name="CPU">
           <instance name="CPU">
             <register-group address-space="data" name="CPU" name-in-module="CPU" offset="0x0030"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V4"/>
+            </parameters>
           </instance>
         </module>
         <module id="I2104" name="CPUINT">
@@ -460,12 +464,12 @@
         <interrupt index="7" module-instance="TCA0" name="LUNF"/>
         <interrupt index="7" module-instance="TCA0" name="OVF"/>
         <interrupt index="8" module-instance="TCA0" name="HUNF"/>
-        <interrupt index="9" module-instance="TCA0" name="LCMP0"/>
         <interrupt index="9" module-instance="TCA0" name="CMP0"/>
+        <interrupt index="9" module-instance="TCA0" name="LCMP0"/>
         <interrupt index="10" module-instance="TCA0" name="CMP1"/>
         <interrupt index="10" module-instance="TCA0" name="LCMP1"/>
-        <interrupt index="11" module-instance="TCA0" name="LCMP2"/>
         <interrupt index="11" module-instance="TCA0" name="CMP2"/>
+        <interrupt index="11" module-instance="TCA0" name="LCMP2"/>
         <interrupt index="12" module-instance="TCB0" name="INT"/>
         <interrupt index="13" module-instance="TCB1" name="INT"/>
         <interrupt index="14" module-instance="TWI0" name="TWIS"/>
@@ -743,12 +747,7 @@
       </value-group>
       <value-group caption="Bod level select" name="BOD_LVL">
         <value caption="1.8 V" name="BODLEVEL0" value="0x00"/>
-        <value caption="2.1 V" name="BODLEVEL1" value="0x01"/>
         <value caption="2.6 V" name="BODLEVEL2" value="0x02"/>
-        <value caption="2.9 V" name="BODLEVEL3" value="0x03"/>
-        <value caption="3.3 V" name="BODLEVEL4" value="0x04"/>
-        <value caption="3.7 V" name="BODLEVEL5" value="0x05"/>
-        <value caption="4.0 V" name="BODLEVEL6" value="0x06"/>
         <value caption="4.2 V" name="BODLEVEL7" value="0x07"/>
       </value-group>
       <value-group caption="Configuration select" name="BOD_VLMCFG">
@@ -1055,7 +1054,6 @@
           <bitfield caption="Reset CRC scan" mask="0x80" name="RESET" rw="RW"/>
         </register>
         <register caption="Control B" initval="0x00" name="CTRLB" offset="0x1" rw="RW" size="1">
-          <bitfield caption="CRC Flash Access Mode" mask="0x30" name="MODE" rw="RW" values="CRCSCAN_MODE"/>
           <bitfield caption="CRC Source" mask="0x3" name="SRC" rw="RW" values="CRCSCAN_SRC"/>
         </register>
         <register caption="Status" initval="0x02" name="STATUS" offset="0x2" rw="R" size="1">
@@ -1063,12 +1061,6 @@
           <bitfield caption="CRC Ok" mask="0x2" name="OK" rw="R"/>
         </register>
       </register-group>
-      <value-group caption="CRC Flash Access Mode select" name="CRCSCAN_MODE">
-        <value caption="Priority to flash" name="PRIORITY" value="0x0"/>
-        <value caption="Reserved" name="RESERVED" value="0x1"/>
-        <value caption="Lowest priority to flash" name="BACKGROUND" value="0x2"/>
-        <value caption="Continuous checks in background" name="CONTINUOUS" value="0x3"/>
-      </value-group>
       <value-group caption="CRC Source select" name="CRCSCAN_SRC">
         <value caption="CRC on entire flash" name="FLASH" value="0x0"/>
         <value caption="CRC on boot and appl section of flash" name="APPLICATION" value="0x1"/>
@@ -1191,7 +1183,7 @@
         <value caption="Configurable Custom Logic LUT2" name="CCL_LUT2" value="0x12"/>
         <value caption="Configurable Custom Logic LUT3" name="CCL_LUT3" value="0x13"/>
         <value caption="Analog Comparator 0 out" name="AC0_OUT" value="0x20"/>
-        <value caption="ADC 0 Comparator Event" name="ADC0_COMP" value="0x24"/>
+        <value caption="ADC 0 Result Ready Event" name="ADC0_RESRDY" value="0x24"/>
         <value caption="Port 0 Pin 0" name="PORT0_PIN0" value="0x40"/>
         <value caption="Port 0 Pin 1" name="PORT0_PIN1" value="0x41"/>
         <value caption="Port 0 Pin 2" name="PORT0_PIN2" value="0x42"/>
@@ -1218,10 +1210,10 @@
         <value caption="Timer/Counter A0 compare 0" name="TCA0_CMP0" value="0x84"/>
         <value caption="Timer/Counter A0 compare 1" name="TCA0_CMP1" value="0x85"/>
         <value caption="Timer/Counter A0 compare 2" name="TCA0_CMP2" value="0x86"/>
-        <value caption="Timer/Counter B0 compare 0" name="TCB0_CMP0" value="0xA0"/>
-        <value caption="Timer/Counter B1 compare 0" name="TCB1_CMP0" value="0xA2"/>
-        <value caption="Timer/Counter B2 compare 0" name="TCB2_CMP0" value="0xA4"/>
-        <value caption="Timer/Counter B3 compare 0" name="TCB3_CMP0" value="0xA6"/>
+        <value caption="Timer/Counter B0 capture" name="TCB0_CAPT" value="0xA0"/>
+        <value caption="Timer/Counter B1 capture" name="TCB1_CAPT" value="0xA2"/>
+        <value caption="Timer/Counter B2 capture" name="TCB2_CAPT" value="0xA4"/>
+        <value caption="Timer/Counter B3 capture" name="TCB3_CAPT" value="0xA6"/>
       </value-group>
       <value-group caption="Software event on channels select" name="EVSYS_STROBE0">
         <value caption="" name="EV_STROBE_CH0" value="0x01"/>
@@ -1247,14 +1239,14 @@
     </module>
     <module caption="Fuses" id="I2600" name="FUSE">
       <register-group caption="Fuses" name="FUSE" size="0x09">
-        <register caption="Application Code Section End" name="APPEND" offset="0x7" rw="RW" size="1" initval="0x00"/>
+        <register caption="Application Code Section End" initval="0x00" name="APPEND" offset="0x7" rw="RW" size="1"/>
         <register caption="BOD Configuration" initval="0x00" name="BODCFG" offset="0x1" rw="RW" size="1">
           <bitfield caption="BOD Operation in Active Mode" mask="0xc" name="ACTIVE" rw="RW" values="FUSE_ACTIVE"/>
           <bitfield caption="BOD Level" mask="0xe0" name="LVL" rw="RW" values="FUSE_LVL"/>
           <bitfield caption="BOD Sample Frequency" mask="0x10" name="SAMPFREQ" rw="RW" values="FUSE_SAMPFREQ"/>
           <bitfield caption="BOD Operation in Sleep Mode" mask="0x3" name="SLEEP" rw="RW" values="FUSE_SLEEP"/>
         </register>
-        <register caption="Boot Section End" name="BOOTEND" offset="0x8" rw="RW" size="1" initval="0x00"/>
+        <register caption="Boot Section End" initval="0x00" name="BOOTEND" offset="0x8" rw="RW" size="1"/>
         <register caption="Oscillator Configuration" initval="0x02" name="OSCCFG" offset="0x2" rw="RW" size="1">
           <bitfield caption="Frequency Select" mask="0x3" name="FREQSEL" rw="RW" values="FUSE_FREQSEL"/>
           <bitfield caption="Oscillator Lock" mask="0x80" name="OSCLOCK" rw="RW"/>
@@ -1280,12 +1272,7 @@
       </value-group>
       <value-group caption="BOD Level select" name="FUSE_LVL">
         <value caption="1.8 V" name="BODLEVEL0" value="0x00"/>
-        <value caption="2.1 V" name="BODLEVEL1" value="0x01"/>
         <value caption="2.6 V" name="BODLEVEL2" value="0x02"/>
-        <value caption="2.9 V" name="BODLEVEL3" value="0x03"/>
-        <value caption="3.3 V" name="BODLEVEL4" value="0x04"/>
-        <value caption="3.7 V" name="BODLEVEL5" value="0x05"/>
-        <value caption="4.0 V" name="BODLEVEL6" value="0x06"/>
         <value caption="4.2 V" name="BODLEVEL7" value="0x07"/>
       </value-group>
       <value-group caption="BOD Sample Frequency select" name="FUSE_SAMPFREQ">
@@ -1574,6 +1561,7 @@
         <register caption="Compare" name="CMP" offset="0x0C" rw="RW" size="2"/>
         <register caption="Counter" name="CNT" offset="0x08" rw="RW" size="2"/>
         <register caption="Control A" initval="0x00" name="CTRLA" offset="0x00" rw="RW" size="1">
+          <bitfield caption="Correction enable" mask="0x4" name="CORREN" rw="RW"/>
           <bitfield caption="Prescaling Factor" mask="0x78" name="PRESCALER" rw="RW" values="RTC_PRESCALER"/>
           <bitfield caption="Enable" mask="0x1" name="RTCEN" rw="RW"/>
           <bitfield caption="Run In Standby" mask="0x80" name="RUNSTDBY" rw="RW"/>

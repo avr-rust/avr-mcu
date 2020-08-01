@@ -2,10 +2,10 @@
 <avr-tools-device-file xmlns:xalan="http://xml.apache.org/xalan" xmlns:NumHelper="NumHelper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="../../schema/avr_tools_device_file.xsd">
   <variants>
     <variant ordercode="ATmega168A-AU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="TQFP32" package="TQFP32" vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega168A-CCU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="UFBGA32" package="UFBGA32"  vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega168A-MMH" tempmin="-40" tempmax="85" speedmax="20000000" pinout="QFN28" package="QFN28"  vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega168A-MU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="QFN32" package="QFN32"  vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega168A-PU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="PDIP28" package="PDIP28"  vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega168A-CCU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="UFBGA32" package="UFBGA32" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega168A-MMH" tempmin="-40" tempmax="85" speedmax="20000000" pinout="QFN28" package="QFN28" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega168A-MU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="QFN32" package="QFN32" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega168A-PU" tempmin="-40" tempmax="85" speedmax="20000000" pinout="PDIP28" package="PDIP28" vccmin="1.8" vccmax="5.5"/>
   </variants>
   <devices>
     <device name="ATmega168A" architecture="AVR8" family="megaAVR">
@@ -210,6 +210,9 @@
             <signals>
               <signal group="CLK" index="0" function="default" pad="PB0"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="FUSE">
@@ -515,7 +518,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -1057,9 +1060,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
   </modules>
   <pinouts>
@@ -1196,7 +1197,6 @@
       <pin position="B2" pad="PD4"/>
       <pin position="C1" pad="GND"/>
       <pin position="D1" pad="VDD"/>
-      <pin position="C1" pad="GND"/>
       <pin position="D2" pad="VDD"/>
       <pin position="E1" pad="PB6"/>
       <pin position="F1" pad="PB7"/>

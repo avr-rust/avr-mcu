@@ -65,6 +65,9 @@
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V3"/>
+            </parameters>
           </instance>
         </module>
         <module name="TWI">
@@ -353,7 +356,7 @@
           <bitfield caption="Brown-out Detector trigger level" mask="0x07" name="BODLEVEL" values="ENUM_BODLEVEL"/>
           <bitfield caption="Hardware Boot Enable" mask="0x08" name="HWBE"/>
         </register>
-        <register caption="" name="HIGH" offset="0x01" size="1" initval="0xB9">
+        <register caption="" name="HIGH" offset="0x01" size="1" initval="0x9B">
           <bitfield caption="On-Chip Debug Enabled" mask="0x80" name="OCDEN"/>
           <bitfield caption="JTAG Interface Enabled" mask="0x40" name="JTAGEN"/>
           <bitfield caption="Serial program downloading (SPI) enabled" mask="0x20" name="SPIEN"/>
@@ -439,7 +442,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -647,9 +650,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V3"/>
-      </parameters>
+
     </module>
     <module caption="Two Wire Serial Interface" name="TWI">
       <register-group caption="Two Wire Serial Interface" name="TWI">

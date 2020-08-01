@@ -212,6 +212,9 @@
             <signals>
               <signal group="CLK" index="0" function="default" pad="PB0"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="FUSE">
@@ -430,7 +433,7 @@
         <register caption="" name="EXTENDED" offset="0x02" size="1" initval="0xFF">
           <bitfield caption="Brown-out Detector trigger level" mask="0x07" name="BODLEVEL" values="ENUM_BODLEVEL"/>
         </register>
-        <register caption="" name="HIGH" offset="0x01" size="1" initval="0x99">
+        <register caption="" name="HIGH" offset="0x01" size="1" initval="0xD9">
           <bitfield caption="Reset Disabled (Enable PC6 as i/o pin)" mask="0x80" name="RSTDISBL"/>
           <bitfield caption="Debug Wire enable" mask="0x40" name="DWEN"/>
           <bitfield caption="Serial program downloading (SPI) enabled" mask="0x20" name="SPIEN"/>
@@ -517,7 +520,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -560,7 +563,7 @@
           <bitfield caption="USART Data register Empty Interrupt Enable" mask="0x20" name="UDRIE0"/>
           <bitfield caption="Receiver Enable" mask="0x10" name="RXEN0"/>
           <bitfield caption="Transmitter Enable" mask="0x08" name="TXEN0"/>
-          <bitfield caption="Character Size" mask="0x04" name="UCSZ02"/>
+          <bitfield caption="Character Size - together with UCSZ0 in UCSR0C" mask="0x04" name="UCSZ02"/>
           <bitfield caption="Receive Data Bit 8" mask="0x02" name="RXB80"/>
           <bitfield caption="Transmit Data Bit 8" mask="0x01" name="TXB80"/>
         </register>
@@ -568,7 +571,7 @@
           <bitfield caption="USART Mode Select" mask="0xC0" name="UMSEL0" values="COMM_USART_MODE_2BIT"/>
           <bitfield caption="Parity Mode Bits" mask="0x30" name="UPM0" values="COMM_UPM_PARITY_MODE"/>
           <bitfield caption="Stop Bit Select" mask="0x08" name="USBS0" values="COMM_STOP_BIT_SEL"/>
-          <bitfield caption="Character Size" mask="0x06" name="UCSZ0"/>
+          <bitfield caption="Character Size - together with UCSZ2 in UCSR0B" mask="0x06" name="UCSZ0"/>
           <bitfield caption="Clock Polarity" mask="0x01" name="UCPOL0"/>
         </register>
         <register caption="USART Baud Rate Register Bytes" name="UBRR0" offset="0xC4" size="2" mask="0x0FFF"/>
@@ -926,14 +929,10 @@
         </register>
       </register-group>
       <value-group caption="" name="COMM_SCK_RATE_3BIT">
-        <value caption="fosc/4" name="VAL_0x00" value="0x00"/>
-        <value caption="fosc/16" name="VAL_0x01" value="0x01"/>
-        <value caption="fosc/64" name="VAL_0x02" value="0x02"/>
-        <value caption="fosc/128" name="VAL_0x03" value="0x03"/>
-        <value caption="fosc/2" name="VAL_0x04" value="0x04"/>
-        <value caption="fosc/8" name="VAL_0x05" value="0x05"/>
-        <value caption="fosc/32" name="VAL_0x06" value="0x06"/>
-        <value caption="fosc/64" name="VAL_0x07" value="0x07"/>
+        <value caption="fosc/2 or fosc/4" name="VAL_0x00" value="0x00"/>
+        <value caption="fosc/8 or fosc/16" name="VAL_0x01" value="0x01"/>
+        <value caption="fosc/32 or fosc/64" name="VAL_0x02" value="0x02"/>
+        <value caption="fosc/64 or fosc/128" name="VAL_0x03" value="0x03"/>
       </value-group>
     </module>
     <module caption="Watchdog Timer" name="WDT">
@@ -1043,9 +1042,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
     <module caption="EEPROM" name="EEPROM">
       <register-group caption="EEPROM" name="EEPROM">

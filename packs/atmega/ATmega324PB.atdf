@@ -162,7 +162,7 @@
               <signal group="T" function="default" pad="PB1"/>
               <signal group="ICP" function="default" pad="PD6"/>
               <signal group="OCA" function="default" pad="PD5"/>
-              <signal group="OCB" function="default" pad="PD6"/>
+              <signal group="OCB" function="default" pad="PD4"/>
             </signals>
           </instance>
           <instance name="TC3" caption="Timer/Counter, 16-bit">
@@ -304,7 +304,7 @@
               <signal group="INT" index="0" function="default" pad="PD2"/>
               <signal group="INT" index="1" function="default" pad="PD3"/>
               <signal group="INT" index="2" function="default" pad="PB2"/>
-           </signals>
+            </signals>
           </instance>
         </module>
         <module name="ADC">
@@ -351,8 +351,8 @@
           <instance name="TWI0" caption="Two Wire Serial Interface">
             <register-group name="TWI0" name-in-module="TWI0" offset="0x00" address-space="data" caption="Two Wire Serial Interface"/>
             <signals>
-              <signal group="SDA0" function="default" pad="PC0"/>
-              <signal group="SCL0" function="default" pad="PC1"/>
+              <signal group="SDA0" function="default" pad="PC1"/>
+              <signal group="SCL0" function="default" pad="PC0"/>
             </signals>
           </instance>
           <instance name="TWI1" caption="Two Wire Serial Interface">
@@ -374,6 +374,9 @@
             <signals>
               <signal group="CLK" index="0" function="default" pad="PB1"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="FUSE">
@@ -617,7 +620,7 @@
   <modules>
     <module caption="Fuses" name="FUSE">
       <register-group caption="Fuses" name="FUSE">
-        <register caption="" name="EXTENDED" offset="0x02" size="1" initval="0xF7">
+        <register caption="" name="EXTENDED" offset="0x02" size="1" initval="0x07">
           <bitfield caption="Clock Failure Detection" mask="0x08" name="CFD" values="ENUM_CFD"/>
           <bitfield caption="Brown-out Detector trigger level" mask="0x07" name="BODLEVEL" values="ENUM_BODLEVEL"/>
         </register>
@@ -637,8 +640,8 @@
         </register>
       </register-group>
       <value-group caption="" name="ENUM_CFD">
-        <value caption="Disabled" name="CFD_DISABLED" value="0x00" />
-        <value caption="Enabled" name="CFD_ENABLED" value="0x01" />
+        <value caption="Disabled" name="CFD_DISABLED" value="0x00"/>
+        <value caption="Enabled" name="CFD_ENABLED" value="0x01"/>
       </value-group>
       <value-group caption="" name="ENUM_SUT_CKSEL">
         <value caption="Ext. Clock; Start-up time PWRDWN/RESET: 6 CK/14 CK + 0 ms" name="EXTCLK_6CK_14CK_0MS" value="0x00"/>
@@ -704,7 +707,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -1143,7 +1146,7 @@
         <value caption="ADC Differential Inputs Postive pin 5 Negative pin 2 1x Gain" name="ADC5_ADC2_1X" value="0x1D"/>
         <value caption="Internal Reference (VBG)" name="ADC_VBG" value="0x1E"/>
         <value caption="0V (GND)" name="ADC_GND" value="0x1F"/>
-      </value-group>  
+      </value-group>
       <value-group caption="" name="ANALOG_ADC_PRESCALER">
         <value caption="2" name="VAL_0x00" value="0x00"/>
         <value caption="2" name="VAL_0x01" value="0x01"/>
@@ -1201,69 +1204,69 @@
       </register-group>
       <register-group caption="Timer/Counter, 16-bit" name="TC3">
         <register caption="Timer/Counter3 Interrupt Mask Register" name="TIMSK3" offset="0x71" size="1">
-          <bitfield caption="Timer/Counter1 Input Capture Interrupt Enable" mask="0x20" name="ICIE3"/>
-          <bitfield caption="Timer/Counter1 Output Compare B Match Interrupt Enable" mask="0x04" name="OCIE3B"/>
-          <bitfield caption="Timer/Counter1 Output Compare A Match Interrupt Enable" mask="0x02" name="OCIE3A"/>
-          <bitfield caption="Timer/Counter1 Overflow Interrupt Enable" mask="0x01" name="TOIE3"/>
+          <bitfield caption="Timer/Counter3 Input Capture Interrupt Enable" mask="0x20" name="ICIE3"/>
+          <bitfield caption="Timer/Counter3 Output Compare B Match Interrupt Enable" mask="0x04" name="OCIE3B"/>
+          <bitfield caption="Timer/Counter3 Output Compare A Match Interrupt Enable" mask="0x02" name="OCIE3A"/>
+          <bitfield caption="Timer/Counter3 Overflow Interrupt Enable" mask="0x01" name="TOIE3"/>
         </register>
         <register caption="Timer/Counter Interrupt Flag register" name="TIFR3" offset="0x38" size="1" ocd-rw="R">
-          <bitfield caption="Timer/Counter1 Input Capture Flag" mask="0x20" name="ICF3"/>
-          <bitfield caption="Timer/Counter1 Output Compare B Match Flag" mask="0x04" name="OCF3B"/>
-          <bitfield caption="Timer/Counter1 Output Compare A Match Flag" mask="0x02" name="OCF3A"/>
-          <bitfield caption="Timer/Counter1 Overflow Flag" mask="0x01" name="TOV3"/>
+          <bitfield caption="Timer/Counter3 Input Capture Flag" mask="0x20" name="ICF3"/>
+          <bitfield caption="Timer/Counter3 Output Compare B Match Flag" mask="0x04" name="OCF3B"/>
+          <bitfield caption="Timer/Counter3 Output Compare A Match Flag" mask="0x02" name="OCF3A"/>
+          <bitfield caption="Timer/Counter3 Overflow Flag" mask="0x01" name="TOV3"/>
         </register>
         <register caption="Timer/Counter3 Control Register A" name="TCCR3A" offset="0x90" size="1">
-          <bitfield caption="Compare Output Mode 1A, bits" mask="0xC0" name="COM3A"/>
-          <bitfield caption="Compare Output Mode 1B, bits" mask="0x30" name="COM3B"/>
+          <bitfield caption="Compare Output Mode 3A, bits" mask="0xC0" name="COM3A"/>
+          <bitfield caption="Compare Output Mode 3B, bits" mask="0x30" name="COM3B"/>
           <bitfield caption="Pulse Width Modulator Select Bits" mask="0x03" name="WGM3"/>
         </register>
         <register caption="Timer/Counter3 Control Register B" name="TCCR3B" offset="0x91" size="1">
-          <bitfield caption="Input Capture 1 Noise Canceler" mask="0x80" name="ICNC3"/>
-          <bitfield caption="Input Capture 1 Edge Select" mask="0x40" name="ICES3"/>
+          <bitfield caption="Input Capture 3 Noise Canceler" mask="0x80" name="ICNC3"/>
+          <bitfield caption="Input Capture 3 Edge Select" mask="0x40" name="ICES3"/>
           <bitfield caption="Waveform Generation Mode Bits" mask="0x18" name="WGM3" lsb="2"/>
-          <bitfield caption="Clock Select1 bits" mask="0x07" name="CS3" values="CLK_SEL_3BIT_EXT"/>
+          <bitfield caption="Clock Select3 bits" mask="0x07" name="CS3" values="CLK_SEL_3BIT_EXT"/>
         </register>
         <register caption="Timer/Counter3 Control Register C" name="TCCR3C" offset="0x92" size="1" ocd-rw="">
           <bitfield caption="Force Output Compare for Channel A" mask="0x80" name="FOC3A"/>
           <bitfield caption="Force Output Compare for Channel B" mask="0x40" name="FOC3B"/>
         </register>
-        <register caption="Timer/Counter3  Bytes" name="TCNT3" offset="0x94" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter3 Output Compare Register A  Bytes" name="OCR3A" offset="0x98" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter3 Output Compare Register B  Bytes" name="OCR3B" offset="0x9A" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter3 Input Capture Register  Bytes" name="ICR3" offset="0x96" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter3 Bytes" name="TCNT3" offset="0x94" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter3 Output Compare Register A Bytes" name="OCR3A" offset="0x98" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter3 Output Compare Register B Bytes" name="OCR3B" offset="0x9A" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter3 Input Capture Register Bytes" name="ICR3" offset="0x96" size="2" mask="0xFFFF"/>
       </register-group>
       <register-group caption="Timer/Counter, 16-bit" name="TC4">
         <register caption="Timer/Counter4 Interrupt Mask Register" name="TIMSK4" offset="0x72" size="1">
-          <bitfield caption="Timer/Counter1 Input Capture Interrupt Enable" mask="0x20" name="ICIE4"/>
-          <bitfield caption="Timer/Counter1 Output Compare B Match Interrupt Enable" mask="0x04" name="OCIE4B"/>
-          <bitfield caption="Timer/Counter1 Output Compare A Match Interrupt Enable" mask="0x02" name="OCIE4A"/>
-          <bitfield caption="Timer/Counter1 Overflow Interrupt Enable" mask="0x01" name="TOIE4"/>
+          <bitfield caption="Timer/Counter4 Input Capture Interrupt Enable" mask="0x20" name="ICIE4"/>
+          <bitfield caption="Timer/Counter4 Output Compare B Match Interrupt Enable" mask="0x04" name="OCIE4B"/>
+          <bitfield caption="Timer/Counter4 Output Compare A Match Interrupt Enable" mask="0x02" name="OCIE4A"/>
+          <bitfield caption="Timer/Counter4 Overflow Interrupt Enable" mask="0x01" name="TOIE4"/>
         </register>
         <register caption="Timer/Counter Interrupt Flag register" name="TIFR4" offset="0x39" size="1" ocd-rw="R">
-          <bitfield caption="Timer/Counter1 Input Capture Flag" mask="0x20" name="ICF4"/>
-          <bitfield caption="Timer/Counter1 Output Compare B Match Flag" mask="0x04" name="OCF4B"/>
-          <bitfield caption="Timer/Counter1 Output Compare A Match Flag" mask="0x02" name="OCF4A"/>
-          <bitfield caption="Timer/Counter1 Overflow Flag" mask="0x01" name="TOV4"/>
+          <bitfield caption="Timer/Counter4 Input Capture Flag" mask="0x20" name="ICF4"/>
+          <bitfield caption="Timer/Counter4 Output Compare B Match Flag" mask="0x04" name="OCF4B"/>
+          <bitfield caption="Timer/Counter4 Output Compare A Match Flag" mask="0x02" name="OCF4A"/>
+          <bitfield caption="Timer/Counter4 Overflow Flag" mask="0x01" name="TOV4"/>
         </register>
         <register caption="Timer/Counter4 Control Register A" name="TCCR4A" offset="0xA0" size="1">
-          <bitfield caption="Compare Output Mode 1A, bits" mask="0xC0" name="COM4A"/>
-          <bitfield caption="Compare Output Mode 1B, bits" mask="0x30" name="COM4B"/>
+          <bitfield caption="Compare Output Mode 4A, bits" mask="0xC0" name="COM4A"/>
+          <bitfield caption="Compare Output Mode 4B, bits" mask="0x30" name="COM4B"/>
           <bitfield caption="Pulse Width Modulator Select Bits" mask="0x03" name="WGM4"/>
         </register>
         <register caption="Timer/Counter4 Control Register B" name="TCCR4B" offset="0xA1" size="1">
-          <bitfield caption="Input Capture 1 Noise Canceler" mask="0x80" name="ICNC4"/>
-          <bitfield caption="Input Capture 1 Edge Select" mask="0x40" name="ICES4"/>
+          <bitfield caption="Input Capture 4 Noise Canceler" mask="0x80" name="ICNC4"/>
+          <bitfield caption="Input Capture 4 Edge Select" mask="0x40" name="ICES4"/>
           <bitfield caption="Waveform Generation Mode Bits" mask="0x18" name="WGM4" lsb="2"/>
-          <bitfield caption="Clock Select1 bits" mask="0x07" name="CS4" values="CLK_SEL_3BIT_EXT"/>
+          <bitfield caption="Clock Select4 bits" mask="0x07" name="CS4" values="CLK_SEL_3BIT_EXT"/>
         </register>
         <register caption="Timer/Counter4 Control Register C" name="TCCR4C" offset="0xA2" size="1" ocd-rw="">
           <bitfield caption="Force Output Compare for Channel A" mask="0x80" name="FOC4A"/>
           <bitfield caption="Force Output Compare for Channel B" mask="0x40" name="FOC4B"/>
         </register>
-        <register caption="Timer/Counter4  Bytes" name="TCNT4" offset="0xA4" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter4 Output Compare Register A  Bytes" name="OCR4A" offset="0xA8" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter4 Output Compare Register B  Bytes" name="OCR4B" offset="0xAA" size="2" mask="0xFFFF"/>
-        <register caption="Timer/Counter4 Input Capture Register  Bytes" name="ICR4" offset="0xA6" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter4 Bytes" name="TCNT4" offset="0xA4" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter4 Output Compare Register A Bytes" name="OCR4A" offset="0xA8" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter4 Output Compare Register B Bytes" name="OCR4B" offset="0xAA" size="2" mask="0xFFFF"/>
+        <register caption="Timer/Counter4 Input Capture Register Bytes" name="ICR4" offset="0xA6" size="2" mask="0xFFFF"/>
       </register-group>
       <value-group caption="" name="CLK_SEL_3BIT_EXT">
         <value caption="No Clock Source (Stopped)" name="VAL_0x00" value="0x00"/>
@@ -1502,9 +1505,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
   </modules>
   <pinouts>
