@@ -69,10 +69,12 @@ fn mmcu_from_mcu_name(mcu_name: &str) -> Architecture {
         | "atxmega32c3" | "atxmega32d3" | "atxmega32d4" | "atxmega16a4u" | "atxmega16c4"
         | "atxmega32a4u" | "atxmega32c4" | "atxmega32e5" => Xmega2,
 
-        "attiny212" | "attiny214" | "attiny412" | "attiny414" | "attiny416" | "attiny417"
-        | "attiny814" | "attiny816" | "attiny817" | "attiny1614" | "attiny1616" | "attiny1617"
-        | "attiny3214" | "attiny3216" | "attiny32170" | "atmega808" | "atmega809" | "atmega1608"
-        | "atmega1609" | "atmega3208" | "atmega3209" | "atmega4808" | "atmega4809" => Xmega3,
+        "attiny202" | "attiny204" | "attiny212" | "attiny214" | "attiny402" | "attiny404"
+        | "attiny406" | "attiny412" | "attiny414" | "attiny416" | "attiny417" | "attiny804"
+        | "attiny806" | "attiny807" | "attiny814" | "attiny816" | "attiny817" | "attiny1604"
+        | "attiny1606" | "attiny1607" | "attiny1614" | "attiny1616" | "attiny1617" | "attiny3214"
+        | "attiny3216" | "attiny3217" | "atmega808" | "atmega809" | "atmega1608" | "atmega1609"
+        | "atmega3208" | "atmega3209" | "atmega4808" | "atmega4809" => Xmega3,
 
         "atxmega64a3" | "atxmega64d3" | "atxmega64a3u" | "atxmega64a4u" | "atxmega64b1"
         | "atxmega64b3" | "atxmega64c3" | "atxmega64d4" => Xmega4,
