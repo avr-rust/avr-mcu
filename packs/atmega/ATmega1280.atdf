@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:xalan="http://xml.apache.org/xalan" xmlns:NumHelper="NumHelper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="../../schema/avr_tools_device_file.xsd">
   <variants>
-      <variant ordercode="ATmega1280V-8AU" speedmax="8000000" tempmin="-40" tempmax="85" vccmin="1.8" vccmax="5.5" package="TQFP100" pinout="TQFP"/>
-      <variant ordercode="ATmega1280V-8CU" speedmax="8000000" tempmin="-40" tempmax="85" vccmin="1.8" vccmax="5.5" package="CBGA100" pinout="CBGA"/>
-      <variant ordercode="ATmega1280-16AU" speedmax="16000000" tempmin="-40" tempmax="85" vccmin="2.7" vccmax="5.5" package="TQFP100" pinout="TQFP"/>
-      <variant ordercode="ATmega1280-16CU" speedmax="16000000" tempmin="-40" tempmax="85" vccmin="2.7" vccmax="5.5" package="CBGA100" pinout="CBGA"/>
+    <variant ordercode="ATmega1280V-8AU" speedmax="8000000" tempmin="-40" tempmax="85" vccmin="1.8" vccmax="5.5" package="TQFP100" pinout="TQFP"/>
+    <variant ordercode="ATmega1280V-8CU" speedmax="8000000" tempmin="-40" tempmax="85" vccmin="1.8" vccmax="5.5" package="CBGA100" pinout="CBGA"/>
+    <variant ordercode="ATmega1280-16AU" speedmax="16000000" tempmin="-40" tempmax="85" vccmin="2.7" vccmax="5.5" package="TQFP100" pinout="TQFP"/>
+    <variant ordercode="ATmega1280-16CU" speedmax="16000000" tempmin="-40" tempmax="85" vccmin="2.7" vccmax="5.5" package="CBGA100" pinout="CBGA"/>
   </variants>
   <devices>
     <device name="ATmega1280" architecture="AVR8" family="megaAVR">
@@ -377,6 +377,9 @@
             <signals>
               <signal group="CLKO" index="0" function="default" pad="PE7"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V3"/>
+            </parameters>
           </instance>
         </module>
         <module name="ADC">
@@ -715,7 +718,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -1499,16 +1502,14 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V3"/>
-      </parameters>
+
     </module>
     <module caption="Analog-to-Digital Converter" name="ADC">
       <register-group caption="Analog-to-Digital Converter" name="ADC">
         <register caption="The ADC multiplexer Selection Register" name="ADMUX" offset="0x7C" size="1">
           <bitfield caption="Reference Selection Bits" mask="0xC0" name="REFS" values="ANALOG_ADC_V_REF6"/>
           <bitfield caption="Left Adjust Result" mask="0x20" name="ADLAR"/>
-          <bitfield caption="Analog Channel and Gain Selection Bits" mask="0x1F" name="MUX"/>
+          <bitfield caption="Analog Channel and Gain Selection Bits" mask="0x1F" name="MUX" values="ADC_MUX_DIFF6"/>
         </register>
         <register caption="ADC Data Register  Bytes" name="ADC" offset="0x78" size="2" mask="0xFFFF"/>
         <register caption="The ADC Control and Status register A" name="ADCSRA" offset="0x7A" size="1" ocd-rw="R">
@@ -1550,6 +1551,70 @@
         <value caption="AVCC with external capacitor at AREF pin" name="VAL_0x01" value="0x01"/>
         <value caption="Internal 1.1V Voltage Reference with external capacitor at AREF pin" name="VAL_0x02" value="0x02"/>
         <value caption="Internal 2.56V Voltage Reference with external capacitor at AREF pin" name="VAL_0x03" value="0x03"/>
+      </value-group>
+      <value-group caption="" name="ADC_MUX_DIFF6">
+        <value caption="ADC Single Ended Input pin 0" name="ADC0" value="0x00"/>
+        <value caption="ADC Single Ended Input pin 1" name="ADC1" value="0x01"/>
+        <value caption="ADC Single Ended Input pin 2" name="ADC2" value="0x02"/>
+        <value caption="ADC Single Ended Input pin 3" name="ADC3" value="0x03"/>
+        <value caption="ADC Single Ended Input pin 4" name="ADC4" value="0x04"/>
+        <value caption="ADC Single Ended Input pin 5" name="ADC5" value="0x05"/>
+        <value caption="ADC Single Ended Input pin 6" name="ADC6" value="0x06"/>
+        <value caption="ADC Single Ended Input pin 7" name="ADC7" value="0x07"/>
+        <value caption="ADC Differential Inputs Postive pin 0 Negative pin 0 10x Gain" name="ADC0_ADC0_10X" value="0x08"/>
+        <value caption="ADC Differential Inputs Postive pin 1 Negative pin 0 10x Gain" name="ADC1_ADC0_10X" value="0x09"/>
+        <value caption="ADC Differential Inputs Postive pin 0 Negative pin 0 200x Gain" name="ADC0_ADC0_200x" value="0x0A"/>
+        <value caption="ADC Differential Inputs Postive pin 1 Negative pin 0 200x Gain" name="ADC1_ADC0_200X" value="0x0B"/>
+        <value caption="ADC Differential Inputs Postive pin 2 Negative pin 2 10x Gain" name="ADC2_ADC2_10X" value="0x0C"/>
+        <value caption="ADC Differential Inputs Postive pin 3 Negative pin 2 10x Gain" name="ADC3_ADC2_10X" value="0x0D"/>
+        <value caption="ADC Differential Inputs Postive pin 2 Negative pin 2 200x Gain" name="ADC2_ADC2_200X" value="0x0E"/>
+        <value caption="ADC Differential Inputs Postive pin 3 Negative pin 2 200x Gain" name="ADC3_ADC2_200X" value="0x0F"/>
+        <value caption="ADC Differential Inputs Postive pin 0 Negative pin 1 1x Gain" name="ADC0_ADC1_1X" value="0x10"/>
+        <value caption="ADC Differential Inputs Postive pin 1 Negative pin 1 1x Gain" name="ADC1_ADC1_1X" value="0x11"/>
+        <value caption="ADC Differential Inputs Postive pin 2 Negative pin 1 1x Gain" name="ADC2_ADC1_1X" value="0x12"/>
+        <value caption="ADC Differential Inputs Postive pin 3 Negative pin 1 1x Gain" name="ADC3_ADC1_1X" value="0x13"/>
+        <value caption="ADC Differential Inputs Postive pin 4 Negative pin 1 1x Gain" name="ADC4_ADC1_1X" value="0x14"/>
+        <value caption="ADC Differential Inputs Postive pin 5 Negative pin 1 1x Gain" name="ADC5_ADC1_1X" value="0x15"/>
+        <value caption="ADC Differential Inputs Postive pin 6 Negative pin 1 1x Gain" name="ADC6_ADC1_1X" value="0x16"/>
+        <value caption="ADC Differential Inputs Postive pin 7 Negative pin 1 1x Gain" name="ADC7_ADC1_1X" value="0x17"/>
+        <value caption="ADC Differential Inputs Postive pin 0 Negative pin 2 1x Gain" name="ADC0_ADC2_1X" value="0x18"/>
+        <value caption="ADC Differential Inputs Postive pin 1 Negative pin 2 1x Gain" name="ADC1_ADC2_1X" value="0x19"/>
+        <value caption="ADC Differential Inputs Postive pin 2 Negative pin 2 1x Gain" name="ADC2_ADC2_1X" value="0x1A"/>
+        <value caption="ADC Differential Inputs Postive pin 3 Negative pin 2 1x Gain" name="ADC3_ADC2_1X" value="0x1B"/>
+        <value caption="ADC Differential Inputs Postive pin 4 Negative pin 2 1x Gain" name="ADC4_ADC2_1X" value="0x1C"/>
+        <value caption="ADC Differential Inputs Postive pin 5 Negative pin 2 1x Gain" name="ADC5_ADC2_1X" value="0x1D"/>
+        <value caption="Internal Reference (VBG)" name="ADC_VBG" value="0x1E"/>
+        <value caption="0V (GND)" name="ADC_GND" value="0x1F"/>
+        <value caption="ADC Single Ended Input pin 8" name="ADC8" value="0x20"/>
+        <value caption="ADC Single Ended Input pin 9" name="ADC9" value="0x21"/>
+        <value caption="ADC Single Ended Input pin 10" name="ADC10" value="0x22"/>
+        <value caption="ADC Single Ended Input pin 11" name="ADC11" value="0x23"/>
+        <value caption="ADC Single Ended Input pin 12" name="ADC12" value="0x24"/>
+        <value caption="ADC Single Ended Input pin 13" name="ADC13" value="0x25"/>
+        <value caption="ADC Single Ended Input pin 14" name="ADC14" value="0x26"/>
+        <value caption="ADC Single Ended Input pin 15" name="ADC15" value="0x27"/>
+        <value caption="ADC Differential Inputs Postive pin 8 Negative pin 8 10x Gain" name="ADC8_ADC8_10X" value="0x28"/>
+        <value caption="ADC Differential Inputs Postive pin 9 Negative pin 8 10x Gain" name="ADC9_ADC8_10X" value="0x29"/>
+        <value caption="ADC Differential Inputs Postive pin 8 Negative pin 8 200x Gain" name="ADC8_ADC8_200x" value="0x2A"/>
+        <value caption="ADC Differential Inputs Postive pin 9 Negative pin 8 200x Gain" name="ADC9_ADC8_200X" value="0x2B"/>
+        <value caption="ADC Differential Inputs Postive pin 10 Negative pin 10 10x Gain" name="ADC10_ADC10_10X" value="0x2C"/>
+        <value caption="ADC Differential Inputs Postive pin 11 Negative pin 10 10x Gain" name="ADC11_ADC10_10X" value="0x2D"/>
+        <value caption="ADC Differential Inputs Postive pin 10 Negative pin 10 200x Gain" name="ADC10_ADC10_200X" value="0x2E"/>
+        <value caption="ADC Differential Inputs Postive pin 11 Negative pin 10 200x Gain" name="ADC11_ADC10_200X" value="0x2F"/>
+        <value caption="ADC Differential Inputs Postive pin 8 Negative pin 9 1x Gain" name="ADC8_ADC9_1X" value="0x30"/>
+        <value caption="ADC Differential Inputs Postive pin 9 Negative pin 9 1x Gain" name="ADC9_ADC9_1X" value="0x31"/>
+        <value caption="ADC Differential Inputs Postive pin 10 Negative pin 9 1x Gain" name="ADC10_ADC9_1X" value="0x32"/>
+        <value caption="ADC Differential Inputs Postive pin 11 Negative pin 9 1x Gain" name="ADC11_ADC9_1X" value="0x33"/>
+        <value caption="ADC Differential Inputs Postive pin 12 Negative pin 9 1x Gain" name="ADC12_ADC9_1X" value="0x34"/>
+        <value caption="ADC Differential Inputs Postive pin 13 Negative pin 9 1x Gain" name="ADC13_ADC9_1X" value="0x35"/>
+        <value caption="ADC Differential Inputs Postive pin 14 Negative pin 9 1x Gain" name="ADC14_ADC9_1X" value="0x36"/>
+        <value caption="ADC Differential Inputs Postive pin 15 Negative pin 9 1x Gain" name="ADC15_ADC9_1X" value="0x37"/>
+        <value caption="ADC Differential Inputs Postive pin 8 Negative pin 10 1x Gain" name="ADC8_ADC10_1X" value="0x38"/>
+        <value caption="ADC Differential Inputs Postive pin 9 Negative pin 10 1x Gain" name="ADC9_ADC10_1X" value="0x39"/>
+        <value caption="ADC Differential Inputs Postive pin 10 Negative pin 10 1x Gain" name="ADC10_ADC10_1X" value="0x3A"/>
+        <value caption="ADC Differential Inputs Postive pin 11 Negative pin 10 1x Gain" name="ADC11_ADC10_1X" value="0x3B"/>
+        <value caption="ADC Differential Inputs Postive pin 12 Negative pin 10 1x Gain" name="ADC12_ADC10_1X" value="0x3C"/>
+        <value caption="ADC Differential Inputs Postive pin 13 Negative pin 10 1x Gain" name="ADC13_ADC10_1X" value="0x3D"/>
       </value-group>
       <value-group caption="" name="ANALOG_ADC_PRESCALER">
         <value caption="2" name="VAL_0x00" value="0x00"/>

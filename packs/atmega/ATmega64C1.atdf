@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:xalan="http://xml.apache.org/xalan" xmlns:NumHelper="NumHelper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="../../schema/avr_tools_device_file.xsd">
   <variants>
-    <variant tempmin="0" tempmax="0" speedmax="0" package="" ordercode="standard" vccmin="2.7" vccmax="5.5"/>
+    <variant ordercode="ATmega64C1-AU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN32" package="TQFP32" vccmin="2.7" vccmax="5.5"/>
+    <variant ordercode="ATmega64C1-MU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN32" package="QFN32" vccmin="2.7" vccmax="5.5"/>
   </variants>
   <devices>
     <device name="ATmega64C1" architecture="AVR8" family="megaAVR">
@@ -39,15 +40,50 @@
         <module name="PORT">
           <instance name="PORTB" caption="I/O Port">
             <register-group name="PORTB" name-in-module="PORTB" offset="0x00" address-space="data" caption="I/O Port"/>
+            <signals>
+              <signal function="IOPORT" group="PIN" index="0" pad="PB0"/>
+              <signal function="IOPORT" group="PIN" index="1" pad="PB1"/>
+              <signal function="IOPORT" group="PIN" index="2" pad="PB2"/>
+              <signal function="IOPORT" group="PIN" index="3" pad="PB3"/>
+              <signal function="IOPORT" group="PIN" index="4" pad="PB4"/>
+              <signal function="IOPORT" group="PIN" index="5" pad="PB5"/>
+              <signal function="IOPORT" group="PIN" index="6" pad="PB6"/>
+              <signal function="IOPORT" group="PIN" index="7" pad="PB7"/>
+            </signals>
           </instance>
           <instance name="PORTC" caption="I/O Port">
             <register-group name="PORTC" name-in-module="PORTC" offset="0x00" address-space="data" caption="I/O Port"/>
+            <signals>
+              <signal function="IOPORT" group="PIN" index="0" pad="PC0"/>
+              <signal function="IOPORT" group="PIN" index="1" pad="PC1"/>
+              <signal function="IOPORT" group="PIN" index="2" pad="PC2"/>
+              <signal function="IOPORT" group="PIN" index="3" pad="PC3"/>
+              <signal function="IOPORT" group="PIN" index="4" pad="PC4"/>
+              <signal function="IOPORT" group="PIN" index="5" pad="PC5"/>
+              <signal function="IOPORT" group="PIN" index="6" pad="PC6"/>
+              <signal function="IOPORT" group="PIN" index="7" pad="PC7"/>
+            </signals>
           </instance>
           <instance name="PORTD" caption="I/O Port">
             <register-group name="PORTD" name-in-module="PORTD" offset="0x00" address-space="data" caption="I/O Port"/>
+            <signals>
+              <signal function="IOPORT" group="PIN" index="0" pad="PD0"/>
+              <signal function="IOPORT" group="PIN" index="1" pad="PD1"/>
+              <signal function="IOPORT" group="PIN" index="2" pad="PD2"/>
+              <signal function="IOPORT" group="PIN" index="3" pad="PD3"/>
+              <signal function="IOPORT" group="PIN" index="4" pad="PD4"/>
+              <signal function="IOPORT" group="PIN" index="5" pad="PD5"/>
+              <signal function="IOPORT" group="PIN" index="6" pad="PD6"/>
+              <signal function="IOPORT" group="PIN" index="7" pad="PD7"/>
+            </signals>
           </instance>
           <instance name="PORTE" caption="I/O Port">
             <register-group name="PORTE" name-in-module="PORTE" offset="0x00" address-space="data" caption="I/O Port"/>
+            <signals>
+              <signal function="IOPORT" group="PIN" index="0" pad="PE0"/>
+              <signal function="IOPORT" group="PIN" index="1" pad="PE1"/>
+              <signal function="IOPORT" group="PIN" index="2" pad="PE2"/>
+            </signals>
           </instance>
         </module>
         <module name="CAN">
@@ -58,41 +94,96 @@
         <module name="AC">
           <instance name="AC" caption="Analog Comparator">
             <register-group name="AC" name-in-module="AC" offset="0x00" address-space="data" caption="Analog Comparator"/>
+            <signals>
+              <signal function="AC" group="ACMP" index="0" pad="PD7"/>
+              <signal function="AC" group="ACMP" index="1" pad="PC6"/>
+              <signal function="AC" group="ACMP" index="2" pad="PD5"/>
+              <signal function="AC" group="ACMP" index="3" pad="PC5"/>
+              <signal function="AC" group="ACMPN" index="0" pad="PB2"/>
+              <signal function="AC" group="ACMPN" index="1" pad="PB5"/>
+              <signal function="AC" group="ACMPN" index="2" pad="PD6"/>
+              <signal function="AC" group="ACMPN" index="3" pad="PC4"/>
+            </signals>
           </instance>
         </module>
         <module name="DAC">
           <instance name="DAC" caption="Digital-to-Analog Converter">
             <register-group name="DAC" name-in-module="DAC" offset="0x00" address-space="data" caption="Digital-to-Analog Converter"/>
+            <signals>
+              <signal function="DAC" group="D2A" pad="PC7"/>
+            </signals>
           </instance>
         </module>
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="TC8">
           <instance name="TC0" caption="Timer/Counter, 8-bit">
             <register-group name="TC0" name-in-module="TC0" offset="0x00" address-space="data" caption="Timer/Counter, 8-bit"/>
+            <signals>
+              <signal function="TC0" group="T0" pad="PC2"/>
+              <signal function="TC0" group="OC0A" pad="PD3"/>
+              <signal function="TC0" group="OC0B" pad="PE1"/>
+            </signals>
           </instance>
         </module>
         <module name="TC16">
           <instance name="TC1" caption="Timer/Counter, 16-bit">
             <register-group name="TC1" name-in-module="TC1" offset="0x00" address-space="data" caption="Timer/Counter, 16-bit"/>
+            <signals>
+              <signal function="TC1" group="T1" pad="PC3"/>
+              <signal function="TC1" group="ICP1A" pad="PD4"/>
+              <signal function="TC1" group="ICP1B" pad="PC3"/>
+              <signal function="TC1" group="OC1A" pad="PD2"/>
+              <signal function="TC1" group="OC1B" pad="PC1"/>
+            </signals>
           </instance>
         </module>
         <module name="ADC">
           <instance name="ADC" caption="Analog-to-Digital Converter">
             <register-group name="ADC" name-in-module="ADC" offset="0x00" address-space="data" caption="Analog-to-Digital Converter"/>
+            <signals>
+              <signal function="ADC" group="ADC" index="0" pad="PE2"/>
+              <signal function="ADC" group="ADC" index="1" pad="PD4"/>
+              <signal function="ADC" group="ADC" index="2" pad="PD5"/>
+              <signal function="ADC" group="ADC" index="3" pad="PD6"/>
+              <signal function="ADC" group="ADC" index="4" pad="PB7"/>
+              <signal function="ADC" group="ADC" index="5" pad="PB2"/>
+              <signal function="ADC" group="ADC" index="6" pad="PB5"/>
+              <signal function="ADC" group="ADC" index="7" pad="PB6"/>
+              <signal function="ADC" group="ADC" index="8" pad="PC4"/>
+              <signal function="ADC" group="ADC" index="9" pad="PC5"/>
+              <signal function="ADC" group="ADC" index="10" pad="PC6"/>
+            </signals>
           </instance>
         </module>
         <module name="LINUART">
           <instance name="LINUART" caption="Local Interconnect Network">
             <register-group name="LINUART" name-in-module="LINUART" offset="0x00" address-space="data" caption="Local Interconnect Network"/>
+            <signals>
+              <signal function="LIN" group="TXLIN" pad="PD3"/>
+              <signal function="LIN" group="RXLIN" pad="PD4"/>
+            </signals>
           </instance>
         </module>
         <module name="SPI">
           <instance name="SPI" caption="Serial Peripheral Interface">
             <register-group name="SPI" name-in-module="SPI" offset="0x00" address-space="data" caption="Serial Peripheral Interface"/>
+            <signals>
+              <signal function="SPI" group="MISO" pad="PB0"/>
+              <signal function="SPI_ALT" group="MISO" pad="PD2"/>
+              <signal function="SPI" group="MOSI" pad="PB1"/>
+              <signal function="SPI_ALT" group="MOSI" pad="PD3"/>
+              <signal function="SPI" group="SCK" pad="PB7"/>
+              <signal function="SPI_ALT" group="SCK" pad="PD4"/>
+              <signal function="SPI" group="SS" pad="PD3"/>
+              <signal function="SPI_ALT" group="SS" pad="PC1"/>
+            </signals>
           </instance>
         </module>
         <module name="WDT">
@@ -103,6 +194,39 @@
         <module name="EXINT">
           <instance name="EXINT" caption="External Interrupts">
             <register-group name="EXINT" name-in-module="EXINT" offset="0x00" address-space="data" caption="External Interrupts"/>
+            <signals>
+              <signal function="EXINT" group="INT" index="0" pad="PD6"/>
+              <signal function="EXINT" group="INT" index="1" pad="PB2"/>
+              <signal function="EXINT" group="INT" index="2" pad="PB5"/>
+              <signal function="EXINT" group="INT" index="3" pad="PC0"/>
+              <signal function="EXINT" group="PCINT" index="0" pad="PB0"/>
+              <signal function="EXINT" group="PCINT" index="1" pad="PB1"/>
+              <signal function="EXINT" group="PCINT" index="2" pad="PB2"/>
+              <signal function="EXINT" group="PCINT" index="3" pad="PB3"/>
+              <signal function="EXINT" group="PCINT" index="4" pad="PB4"/>
+              <signal function="EXINT" group="PCINT" index="5" pad="PB5"/>
+              <signal function="EXINT" group="PCINT" index="6" pad="PB6"/>
+              <signal function="EXINT" group="PCINT" index="7" pad="PB7"/>
+              <signal function="EXINT" group="PCINT" index="8" pad="PC0"/>
+              <signal function="EXINT" group="PCINT" index="9" pad="PC1"/>
+              <signal function="EXINT" group="PCINT" index="10" pad="PC2"/>
+              <signal function="EXINT" group="PCINT" index="11" pad="PC3"/>
+              <signal function="EXINT" group="PCINT" index="12" pad="PC4"/>
+              <signal function="EXINT" group="PCINT" index="13" pad="PC5"/>
+              <signal function="EXINT" group="PCINT" index="14" pad="PC6"/>
+              <signal function="EXINT" group="PCINT" index="15" pad="PC7"/>
+              <signal function="EXINT" group="PCINT" index="16" pad="PD0"/>
+              <signal function="EXINT" group="PCINT" index="17" pad="PD1"/>
+              <signal function="EXINT" group="PCINT" index="18" pad="PD2"/>
+              <signal function="EXINT" group="PCINT" index="19" pad="PD3"/>
+              <signal function="EXINT" group="PCINT" index="20" pad="PD4"/>
+              <signal function="EXINT" group="PCINT" index="21" pad="PD5"/>
+              <signal function="EXINT" group="PCINT" index="22" pad="PD6"/>
+              <signal function="EXINT" group="PCINT" index="23" pad="PD7"/>
+              <signal function="EXINT" group="PCINT" index="24" pad="PE0"/>
+              <signal function="EXINT" group="PCINT" index="25" pad="PE1"/>
+              <signal function="EXINT" group="PCINT" index="26" pad="PE2"/>
+            </signals>
           </instance>
         </module>
         <module name="EEPROM">
@@ -397,7 +521,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -730,9 +854,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
     <module caption="Timer/Counter, 8-bit" name="TC8">
       <register-group caption="Timer/Counter, 8-bit" name="TC0">
@@ -831,7 +953,7 @@
         <register caption="The ADC multiplexer Selection Register" name="ADMUX" offset="0x7C" size="1">
           <bitfield caption="Reference Selection Bits" mask="0xC0" name="REFS" values="ANALOG_ADC_V_REF2"/>
           <bitfield caption="Left Adjust Result" mask="0x20" name="ADLAR"/>
-          <bitfield caption="Analog Channel and Gain Selection Bits" mask="0x1F" name="MUX"/>
+          <bitfield caption="Analog Channel and Gain Selection Bits" mask="0x1F" name="MUX" values="ANALOG_ADC_MUXPOS"/>
         </register>
         <register caption="The ADC Control and Status register" name="ADCSRA" offset="0x7A" size="1" ocd-rw="R">
           <bitfield caption="ADC Enable" mask="0x80" name="ADEN"/>
@@ -891,9 +1013,9 @@
       </register-group>
       <value-group caption="" name="ANALOG_ADC_V_REF2">
         <value caption="AREF, Internal Vref turned off" name="VAL_0x00" value="0x00"/>
-        <value caption="AVCC with external capacitor at AREF pin" name="VAL_0x01" value="0x01"/>
+        <value caption="AVCC reference" name="VAL_0x01" value="0x01"/>
         <value caption="Reserved" name="VAL_0x02" value="0x02"/>
-        <value caption="Internal 2.56V Voltage Reference with external capacitor at AREF pin" name="VAL_0x03" value="0x03"/>
+        <value caption="Internal 2.56V Voltage Reference" name="VAL_0x03" value="0x03"/>
       </value-group>
       <value-group caption="" name="ANALOG_ADC_AUTO_TRIGGER_4BITS">
         <value caption="Free Running mode" name="VAL_0x00" value="0x00"/>
@@ -909,6 +1031,27 @@
         <value caption="PSC2ASY Event" name="VAL_0x0A" value="0x0A"/>
         <value caption="Analog comparator 1" name="VAL_0x0B" value="0x0B"/>
         <value caption="Analog comparator 2" name="VAL_0x0C" value="0x0C"/>
+      </value-group>
+      <value-group caption="Analog Channel Selection Bits select" name="ANALOG_ADC_MUXPOS">
+        <value caption="ADC input pin 0" name="ADC0" value="0x0"/>
+        <value caption="ADC input pin 1" name="ADC1" value="0x1"/>
+        <value caption="ADC input pin 2" name="ADC2" value="0x2"/>
+        <value caption="ADC input pin 3" name="ADC3" value="0x3"/>
+        <value caption="ADC input pin 4" name="ADC4" value="0x4"/>
+        <value caption="ADC input pin 5" name="ADC5" value="0x5"/>
+        <value caption="ADC input pin 6" name="ADC6" value="0x6"/>
+        <value caption="ADC input pin 7" name="ADC7" value="0x7"/>
+        <value caption="ADC input pin 8" name="ADC8" value="0x8"/>
+        <value caption="ADC input pin 9" name="ADC9" value="0x9"/>
+        <value caption="ADC input pin 10" name="ADC10" value="0xA"/>
+        <value caption="Temperature sensor" name="TEMPSENSE" value="0xB"/>
+        <value caption="Internal VCC / 4" name="VCC4" value="0xC"/>
+        <value caption="Current source" name="ISRC" value="0xD"/>
+        <value caption="Analog Differential Amplifier 0" name="AMP0" value="0xE"/>
+        <value caption="Analog Differential Amplifier 1" name="AMP1" value="0xF"/>
+        <value caption="Analog Differential Amplifier 2" name="AMP2" value="0x10"/>
+        <value caption="Bandgap" name="BNDGAP" value="0x11"/>
+        <value caption="0V (GND)" name="GND" value="0x12"/>
       </value-group>
     </module>
     <module caption="Local Interconnect Network" name="LINUART">
@@ -1082,4 +1225,40 @@
       </value-group>
     </module>
   </modules>
+  <pinouts>
+    <pinout name="TQFPQFN32" caption="TQFPQFN32">
+      <pin position="1" pad="PD2"/>
+      <pin position="2" pad="PD3"/>
+      <pin position="3" pad="PC1"/>
+      <pin position="4" pad="VCC"/>
+      <pin position="5" pad="GND"/>
+      <pin position="6" pad="PC2"/>
+      <pin position="7" pad="PC3"/>
+      <pin position="8" pad="PB0"/>
+      <pin position="9" pad="PB1"/>
+      <pin position="10" pad="PE1"/>
+      <pin position="11" pad="PE2"/>
+      <pin position="12" pad="PD4"/>
+      <pin position="13" pad="PD5"/>
+      <pin position="14" pad="PD6"/>
+      <pin position="15" pad="PD7"/>
+      <pin position="16" pad="PB2"/>
+      <pin position="17" pad="PC4"/>
+      <pin position="18" pad="PC5"/>
+      <pin position="19" pad="AVCC"/>
+      <pin position="20" pad="AGND"/>
+      <pin position="21" pad="AREF"/>
+      <pin position="22" pad="PC6"/>
+      <pin position="23" pad="PB3"/>
+      <pin position="24" pad="PB4"/>
+      <pin position="25" pad="PC7"/>
+      <pin position="26" pad="PB5"/>
+      <pin position="27" pad="PB6"/>
+      <pin position="28" pad="PB7"/>
+      <pin position="29" pad="PD0"/>
+      <pin position="30" pad="PC0"/>
+      <pin position="31" pad="PE0"/>
+      <pin position="32" pad="PD1"/>
+    </pinout>
+  </pinouts>
 </avr-tools-device-file>

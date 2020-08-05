@@ -4,7 +4,7 @@
     <variant ordercode="ATmega32A-AU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN44" package="TQFP44" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega32A-PU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="PDIP40" package="PDIP40" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega32A-MU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN44" package="QFN44" vccmin="2.7" vccmax="5.5"/>
-    
+
     <variant ordercode="ATmega32A-AN" tempmin="-40" tempmax="105" speedmax="16000000" pinout="TQFPQFN44" package="TQFP44" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega32A-MN" tempmin="-40" tempmax="105" speedmax="16000000" pinout="TQFPQFN44" package="QFN44" vccmin="2.7" vccmax="5.5"/>
   </variants>
@@ -190,6 +190,9 @@
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="BOOT_LOAD">
@@ -502,7 +505,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -786,7 +789,7 @@
           <bitfield caption="ADC Auto Trigger Source" mask="0xE0" name="ADTS"/>
           <bitfield caption="Analog Comparator Multiplexer Enable" mask="0x08" name="ACME"/>
           <bitfield caption="Pull-up disable" mask="0x04" name="PUD"/>
-          <bitfield caption="Prescaler Reset Timer/Counter2" mask="0x01" name="PSR2"/>
+          <bitfield caption="Prescaler Reset Timer/Counter2" mask="0x02" name="PSR2"/>
           <bitfield caption="Prescaler Reset Timer/Counter1 and Timer/Counter0" mask="0x01" name="PSR10"/>
         </register>
         <register caption="Analog Comparator Control And Status Register" name="ACSR" offset="0x28" size="1" ocd-rw="R">
@@ -919,9 +922,7 @@
         <value value="0x02" caption="4.0 MHz" name="4_0_MHz"/>
         <value value="0x03" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
     <module caption="Bootloader" name="BOOT_LOAD">
       <register-group caption="Bootloader" name="BOOT_LOAD">

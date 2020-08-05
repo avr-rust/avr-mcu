@@ -4,7 +4,7 @@
     <variant ordercode="ATmega16L-8AU" tempmin="-40" tempmax="85" speedmax="8000000" pinout="TQFPQFN44" package="TQFP44" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega16L-8PU" tempmin="-40" tempmax="85" speedmax="8000000" pinout="PDIP40" package="PDIP40" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega16L-8MU" tempmin="-40" tempmax="85" speedmax="8000000" pinout="TQFPQFN44" package="QFN44" vccmin="2.7" vccmax="5.5"/>
-    
+
     <variant ordercode="ATmega16-16AU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN44" package="TQFP44" vccmin="4.5" vccmax="5.5"/>
     <variant ordercode="ATmega16-16PU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="PDIP40" package="PDIP40" vccmin="4.5" vccmax="5.5"/>
     <variant ordercode="ATmega16-16MU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFPQFN44" package="QFN44" vccmin="4.5" vccmax="5.5"/>
@@ -80,6 +80,9 @@
         <module name="CPU">
           <instance name="CPU" caption="CPU Registers">
             <register-group name="CPU" name-in-module="CPU" offset="0x00" address-space="data" caption="CPU Registers"/>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="TC8_ASYNC">
@@ -517,7 +520,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -722,9 +725,7 @@
         <value value="0x02" caption="4.0 MHz" name="4_0_MHz"/>
         <value value="0x03" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
     <module caption="Timer/Counter, 8-bit Async" name="TC8_ASYNC">
       <register-group caption="Timer/Counter, 8-bit Async" name="TC2">

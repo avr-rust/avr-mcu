@@ -270,6 +270,9 @@
             <signals>
               <signal group="CLKO" index="0" function="default" pad="PB1"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="FUSE">
@@ -584,7 +587,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -1067,7 +1070,7 @@
         <value caption="ADC Differential Inputs Postive pin 5 Negative pin 2 1x Gain" name="ADC5_ADC2_1X" value="0x1D"/>
         <value caption="Internal Reference (VBG)" name="ADC_VBG" value="0x1E"/>
         <value caption="0V (GND)" name="ADC_GND" value="0x1F"/>
-      </value-group>  
+      </value-group>
       <value-group caption="" name="ANALOG_ADC_PRESCALER">
         <value caption="2" name="VAL_0x00" value="0x00"/>
         <value caption="2" name="VAL_0x01" value="0x01"/>
@@ -1306,9 +1309,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
   </modules>
   <pinouts>

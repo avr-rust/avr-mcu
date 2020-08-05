@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <avr-tools-device-file xmlns:xalan="http://xml.apache.org/xalan" xmlns:NumHelper="NumHelper" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schema-version="0.3" xsi:noNamespaceSchemaLocation="../../schema/avr_tools_device_file.xsd">
   <variants>
-    <variant ordercode="ATmega169PV-8AU"  tempmin="-40" tempmax="85" speedmax="8000000"  pinout="TQFP64"  package="TQFP64"  vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega169PV-8MU"  tempmin="-40" tempmax="85" speedmax="8000000"  pinout="QFN64"   package="QFN64"   vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega169PV-8MCH" tempmin="-40" tempmax="85" speedmax="8000000"  pinout="DRQFN64" package="DRQFN64" vccmin="1.8" vccmax="5.5"/>
-    <variant ordercode="ATmega169P-16AU"  tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFP64"  package="TQFP64"  vccmin="2.7" vccmax="5.5"/>
-    <variant ordercode="ATmega169P-16MU"  tempmin="-40" tempmax="85" speedmax="16000000" pinout="QFN64"   package="QFN64"   vccmin="2.7" vccmax="5.5"/>
+    <variant ordercode="ATmega169PV-8AU" tempmin="-40" tempmax="85" speedmax="8000000" pinout="TQFP64" package="TQFP64" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega169PV-8MU" tempmin="-40" tempmax="85" speedmax="8000000" pinout="QFN64" package="QFN64" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega169PV-8MCH" tempmin="-40" tempmax="85" speedmax="8000000" pinout="DRQFN64" package="DRQFN64" vccmin="1.8" vccmax="5.5"/>
+    <variant ordercode="ATmega169P-16AU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="TQFP64" package="TQFP64" vccmin="2.7" vccmax="5.5"/>
+    <variant ordercode="ATmega169P-16MU" tempmin="-40" tempmax="85" speedmax="16000000" pinout="QFN64" package="QFN64" vccmin="2.7" vccmax="5.5"/>
     <variant ordercode="ATmega169P-16MCH" tempmin="-40" tempmax="85" speedmax="16000000" pinout="DRQFN64" package="DRQFN64" vccmin="2.7" vccmax="5.5"/>
   </variants>
   <devices>
@@ -269,6 +269,9 @@
             <signals>
               <signal group="CLK" index="0" function="default" pad="PE7"/>
             </signals>
+            <parameters>
+              <param name="CORE_VERSION" value="V2E"/>
+            </parameters>
           </instance>
         </module>
         <module name="USI">
@@ -292,7 +295,7 @@
               <signal group="ADC" index="5" function="default" pad="PF5"/>
               <signal group="ADC" index="6" function="default" pad="PF6"/>
               <signal group="ADC" index="7" function="default" pad="PF7"/>
-            </signals> 
+            </signals>
           </instance>
         </module>
         <module name="BOOT_LOAD">
@@ -575,7 +578,7 @@
     </module>
     <module caption="Lockbits" name="LOCKBIT">
       <register-group caption="Lockbits" name="LOCKBIT">
-        <register caption="" name="LOCKBIT" offset="0x00" size="1">
+        <register caption="" name="LOCKBIT" offset="0x00" size="1" initval="0xFF">
           <bitfield caption="Memory Lock" mask="0x03" name="LB" values="ENUM_LB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x0C" name="BLB0" values="ENUM_BLB"/>
           <bitfield caption="Boot Loader Protection Mode" mask="0x30" name="BLB1" values="ENUM_BLB2"/>
@@ -1200,9 +1203,7 @@
       <value-group caption="Oscillator Calibration Values" name="OSCCAL_VALUE_ADDRESSES">
         <value value="0x00" caption="8.0 MHz" name="8_0_MHz"/>
       </value-group>
-      <parameters>
-        <param name="CORE_VERSION" value="V2E"/>
-      </parameters>
+
     </module>
   </modules>
   <pinouts>
