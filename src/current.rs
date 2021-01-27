@@ -30,6 +30,6 @@ pub fn mcu_name() -> Option<String> {
 
 /// Checks if the current cargo target architecture is AVR.
 pub fn is_compiling_for_avr() -> bool {
-    env::var("CARGO_CFG_TARGET_ARCH").unwrap() == "avr"
+    env::var("CARGO_CFG_TARGET_ARCH") == Ok("avr".to_string())
 }
 
