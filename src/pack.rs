@@ -183,6 +183,7 @@ fn read_signal(signal: &Element) -> Signal {
 ///   <register caption="EEPROM Address Register  Bytes" name="EEAR" offset="0x41" size="2" mask="0x01FF"/>
 ///   <register caption="EEPROM Data Register" name="EEDR" offset="0x40" size="1" mask="0xFF"/>
 /// </register-group>
+/// ```
 fn read_register_group(register_group: &Element) -> RegisterGroup {
     let (name, caption) = (
         register_group.attributes.get("name").unwrap(),
