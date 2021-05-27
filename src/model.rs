@@ -123,8 +123,26 @@ pub struct Module {
 pub struct Instance {
     /// The name of the peripheral instance, for example, `PORTB`.
     pub name: String,
+    /// Reference to the register group that represents this instance.
+    pub register_group_ref: Option<RegisterGroupRef>,
     /// What signals are used in the peripheral.
     pub signals: Vec<Signal>,
+}
+
+/// A refereance to a register group.
+#[derive(Clone, Debug, PartialOrd, PartialEq, Eq, Hash)]
+pub struct RegisterGroupRef {
+    /// The name of the register group being referenced.
+    pub name: String,
+    /// The name of the register group being referenced in the module that
+    /// defines it.
+    pub name_in_module: String,
+    /// The offset of the register group.
+    pub offset: u32,
+    /// The address space.
+    pub address_space: String,
+    /// The caption describing the register group reference.
+    pub caption: Option<String>,
 }
 
 /// A group of registers.
