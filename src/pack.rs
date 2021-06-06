@@ -153,6 +153,8 @@ fn read_variant(variant: &Element) -> Variant {
 fn read_instance(instance: &Element) -> Instance {
     let instance_name = instance.attributes.get("name").unwrap().clone();
 
+    let register_group_ref = instance.get_child("register-group").map(|e| read_register_group_ref(e));
+
     let signals = match instance.get_child("signals") {
         Some(signals) => signals
             .children
@@ -163,7 +165,7 @@ fn read_instance(instance: &Element) -> Instance {
         None => Vec::new(),
     };
 
-    Instance { name: instance_name, signals: signals }
+    Instance { name: instance_name, register_group_ref: register_group_ref, signals: signals }
 }
 
 fn read_signal(signal: &Element) -> Signal {
@@ -171,6 +173,22 @@ fn read_signal(signal: &Element) -> Signal {
         pad: signal.attributes.get("pad").unwrap().clone(),
         group: signal.attributes.get("group").map(|p| p.clone()),
         index: signal.attributes.get("index").map(|i| i.parse().unwrap()),
+    }
+}
+
+/// Reads a register group reference.
+///
+/// This looks like so
+/// ```xml
+/// <register-group address-space="data" name="PORTA" name-in-module="PORT" offset="0x0400"/>
+/// ```
+fn read_register_group_ref(register_group_ref: &Element) -> RegisterGroupRef {
+    RegisterGroupRef {
+        name: register_group_ref.attributes.get("name").unwrap().clone(),
+        name_in_module: register_group_ref.attributes.get("name-in-module").unwrap().clone(),
+        offset: read_int(register_group_ref.attributes.get("offset")).clone(),
+        address_space: register_group_ref.attributes.get("address-space").unwrap().clone(),
+        caption: register_group_ref.attributes.get("caption").map(|p| p.clone()),
     }
 }
 
@@ -183,6 +201,7 @@ fn read_signal(signal: &Element) -> Signal {
 ///   <register caption="EEPROM Address Register  Bytes" name="EEAR" offset="0x41" size="2" mask="0x01FF"/>
 ///   <register caption="EEPROM Data Register" name="EEDR" offset="0x40" size="1" mask="0xFF"/>
 /// </register-group>
+/// ```
 fn read_register_group(register_group: &Element) -> RegisterGroup {
     let (name, caption) = (
         register_group.attributes.get("name").unwrap(),
