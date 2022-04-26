@@ -41,7 +41,7 @@ pub struct Variant {
     pub temperature_max: i32,
     /// The minimum voltage.
     pub voltage_min: f32,
-    /// The maximum voltate.
+    /// The maximum voltage.
     pub voltage_max: f32,
     /// The max clock speed in Hz.
     pub speed_max_hz: u64,
